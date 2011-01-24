@@ -1,0 +1,15 @@
+Revision history for Finance-InteractiveBrokers-SWIG
+------------------------------------------------------------
+Legend:
+BUG:    An actual found or reported bug fix.
+FIX:    Change toward correct behavior, but unreported.
+DOC:    Changes to documentation.
+NEW:    New, previously non-existent feature.
+------------------------------------------------------------
+
+0.01_01  2011-01-24     (developer release)
+         Main suite should be complete
+         Provides interface for InteractiveBrokers API version 9.64
+         Prepped for releasing to CPAN for cpantesters feedback
+
+# END

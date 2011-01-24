@@ -1,0 +1,25 @@
+Changes
+examples/MyEventHandler.pm
+examples/api-demo.pl
+ezembed.c
+ezembed.h
+IBAPI-9.64.cxx
+IBAPI-9.64.h
+IBAPI-9.64.i
+ignore.txt
+lib/Finance/InteractiveBrokers/SWIG.pm
+lib/Finance/InteractiveBrokers/SWIG/EventHandler.pm
+Makefile.PL
+Makefile.swig
+MANIFEST
+README
+t/00-load.t
+t/79-Finance-InteractiveBrokers-SWIG-IBAPI.t
+t/88-Finance-InteractiveBrokers-SWIG-EventHandler.t
+t/89-Finance-InteractiveBrokers-SWIG.t
+t/inc/TestEventHandler.pm
+t/inc/TestUtil.pm
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
+META.yml                                 Module meta-data (added by MakeMaker)
