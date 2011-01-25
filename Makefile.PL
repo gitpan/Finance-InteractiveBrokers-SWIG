@@ -14,7 +14,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-	$VERSION = '0.01_01';
+	$VERSION = '0.01_02';
 }
 
 *TRUE    = \1;

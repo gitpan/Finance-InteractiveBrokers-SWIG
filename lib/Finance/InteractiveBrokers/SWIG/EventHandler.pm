@@ -22,7 +22,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;
 
 use vars qw( $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED $AUTOLOAD );
 BEGIN {
-    $VERSION   = '0.01_01';
+    $VERSION   = '0.01_02';
 }
 
 *TRUE      = \1;
@@ -193,6 +193,8 @@ Create a subclass of this class:
 
     # ...
 
+Then, pass your C<$handler> object into L<Finance::InteractiveBrokers::SWIG/"new()">.
+
 =head1 DESCRIPTION
 
 This module is designed as a base class for catching the events that the
@@ -205,8 +207,8 @@ into a database, analyze, etc).
 An object of your subclass should be instantiated, and passed in as an
 argument to L<Finance::InteractiveBrokers::SWIG/"new">.
 
-There is a well-commented example subclass in the examples/ directory of
-this module's distribution, for you to base your 
+There is a well-commented example subclass in the C<examples/> directory of
+this module's distribution, on which you must base your subclass.
 
 =head1 CONSTRUCTOR
 
@@ -216,13 +218,14 @@ this module's distribution, for you to base your
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> blessed I<$object>, or I<undef> on failure.
+B<RETURNS:> blessed C<$object>, or C<undef> on failure.
 
 =head2 initialize()
 
     my %leftover = $self->initialize( %ARGS );
 
-Initialize the object.  If you are subclassing, override this, not L</new()>.
+Initialize the object.  When subclassing, override this (if desired),
+not L</new()>.
 
 B<ARGUMENTS:> %HASH of arguments passed into L</new()>
 
@@ -240,7 +243,8 @@ or
         Finance::InteractiveBrokers::SWIG::EventHandler::override();
 
 Get a list of IB API events that you I<MUST> override in your subclass.  These
-correspond 1:1 to events in the IB API, but they are dynamically dispatched.
+correspond 1:1 to events in the IB API, but they are dynamically dispatched,
+so you will not find C<sub> definitions in the source.
 
 B<ARGUMENTS:> None.
 
@@ -296,7 +300,7 @@ Jason McManus, C<< <infidel at cpan.org> >>
 
 Please report any bugs or feature requests to
 C<bug-finance-interactivebrokers-swig at rt.cpan.org>, or through
-the web interface atL<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-InteractiveBrokers-SWIG>.  The authors will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-InteractiveBrokers-SWIG>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
 
 =head1 SUPPORT

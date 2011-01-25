@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.01_01';
+    $VERSION  = '0.01_02';
 }
 
 *TRUE     = \1;
@@ -282,7 +282,7 @@ __END__
 
 =head1 NAME
 
-Finance::InteractiveBrokers::SWIG - InteractiveBrokers C++ connector
+Finance::InteractiveBrokers::SWIG - InteractiveBrokers API C++ wrapper and connector
 
 =head1 SYNOPSIS
 
@@ -299,12 +299,15 @@ Then:
     $ib->eConnect();
     $ib->reqCurrentTime();
 
-    # This should probably be a better event loop
+    # Your event loop here
     $ib->processMessags()
         while( $ib->isConnected() );
 
-    # Eventually...
+    # And eventually...
     $ib->eDisconnect();
+
+See the C<examples/> directory in this distribution for more complete and
+well-commented examples.
 
 =head1 DESCRIPTION
 
@@ -314,26 +317,28 @@ intended to be used with L<POE::Component::Client::InteractiveBrokers>, which
 provides a better API, but may be used standalone if desired, by referring
 to the IB documentation itself (under L</"SEE ALSO">).
 
-It is a very complex module with an involved build process, and thus you
-should read this documentation thoroughly.
+It is a very complex module with an involved build process, and as such, you
+should read this documentation thoroughly before building or using this
+module distribution.
 
 =head1 HOW IT WORKS
 
-The IB API is available as either a set of C++ or Java source code files.
-This module builds a library from this, and then runs SWIG (the Simplified
-Interface Wrapper and Generator) against it to provide Perl connectivity.
+The InteractiveBrokers API is available as either a set of C++ or Java
+source files.  This module builds a library from this, and then runs SWIG
+(the Simplified Interface Wrapper and Generator) against it to provide
+Perl connectivity.
 
 The API consists of several methods, callable from this module, as well
 as several events, containing the asynchronous responses from IB to
-methods you have called.
+event handlers you have created.
 
 In order to catch the events, you must subclass
 L<Finance::InteractiveBrokers::SWIG::EventHandler>, and override all of
 the events therein with your own code to handle their responses (e.g.
 save them to a database, or do whatever).
 
-You then pass your $handler into ->new(), and you have complete access
-to the IB API, delegated through the C++ library.
+You then pass your C<$handler> into L</"new()">, and you will have complete
+access to the IB API, delegated via XS through the C++ library.
 
 =head1 PREREQUISITES
 
@@ -352,18 +357,18 @@ Capable of compiling C and C++ files, and running 'make'.
 =item * SWIG >= 1.3.36
 
 The "Simplified Wrapper and Interface Generator", capable of building SWIG
-interfaces.  This module has been tested with versions from 1.3.36-2.0.1.
+interfaces.  This module has been tested with SWIG versions 1.3.36 - 2.0.1.
 
 =back
 
-And optional, but highly recommended:
+And optional, but I<highly> recommended:
 
 =over 4
 
 =item * L<Alien::InteractiveBrokers>
 
 Installs (downloading if necessary) the InteractiveBrokers API files,
-and provides Perly mechanisms for locating them.
+and provides I<Perl>-y mechanisms for locating them.
 
 =back
 
@@ -379,20 +384,16 @@ You can find links to SWIG and the IB API in L</"SEE ALSO">.
 
 B<ARGUMENTS:>
 
-B<handler => $handler> [ B<REQUIRED> ]
-
-=over 4
+B<handler =E<gt> $handler> [ B<REQUIRED> ]
 
 This must be an instantiated object that is a subclass of
 L<Finance::InteractiveBrokers::SWIG::EventHandler>.  It is delegated to when
 receiving events from the IB service.
 
 Please see L<Finance::InteractiveBrokers::SWIG::EventHandler> for notes on
-how to subclass it, and the examples/ directory of this distribution.
+how to subclass it, and the C<examples/> directory of this distribution.
 
-=back
-
-B<RETURNS:> blessed I<$object>, or I<undef> on failure.
+B<RETURNS:> blessed C<$object>, or C<undef> on failure.
 
 =head2 initialize()
 
@@ -415,7 +416,8 @@ or
     my @api_methods = Finance::InteractiveBrokers::SWIG::api_methods();
 
 Get a list of IB API methods you can call from this class.  These correspond
-1:1 to the IB API methods, but they are dynamically dispatched.
+1:1 to the IB API methods, but they are dynamically dispatched, so you won't
+find actual C<sub> definitions for them in the source.
 
 B<ARGUMENTS:> None.
 
@@ -429,7 +431,7 @@ B<NOTE:> You can also get a list of them from the command line, via:
 
 Small wrapper around the IB API eConnect() call to add DNS resolution.
 See the L</"INTERACTIVE BROKERS API"> section for full information how
-to use this.
+to use the IB API.
 
 =head2 api_version()
 
@@ -477,7 +479,7 @@ Jason McManus, C<< <infidel at cpan.org> >>
 
 Please report any bugs or feature requests to
 C<bug-finance-interactivebrokers-swig at rt.cpan.org>, or through
-the web interface atL<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-InteractiveBrokers-SWIG>.  The authors will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-InteractiveBrokers-SWIG>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
 
 =head1 SUPPORT
