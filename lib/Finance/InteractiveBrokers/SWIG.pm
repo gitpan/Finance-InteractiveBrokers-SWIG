@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.01_02';
+    $VERSION  = '0.02';
 }
 
 *TRUE     = \1;
@@ -401,9 +401,9 @@ B<RETURNS:> blessed C<$object>, or C<undef> on failure.
 
 Initialize the object.  If you are subclassing, override this, not L</new()>.
 
-B<ARGUMENTS:> %HASH of arguments passed into L</new()>
+B<ARGUMENTS:> C<%HASH> of arguments passed into L</new()>
 
-B<RETURNS:> %HASH of any leftover arguments.
+B<RETURNS:> C<%HASH> of any leftover arguments.
 
 =head1 METHODS
 
@@ -421,7 +421,7 @@ find actual C<sub> definitions for them in the source.
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> @ARRAY of callable IB API methods.
+B<RETURNS:> C<@ARRAY> of callable IB API methods.
 
 B<NOTE:> You can also get a list of them from the command line, via:
 
@@ -430,8 +430,8 @@ B<NOTE:> You can also get a list of them from the command line, via:
 =head2 eConnect()
 
 Small wrapper around the IB API eConnect() call to add DNS resolution.
-See the L</"INTERACTIVE BROKERS API"> section for full information how
-to use the IB API.
+See L</"INTERACTIVE BROKERS API"> for full information on how to use the
+IB API.
 
 =head2 api_version()
 
@@ -439,7 +439,8 @@ to use the IB API.
 
 Get the IB API version this module was compiled against.
 
-B<RETURNS:> $scalar containing the version as a string, something like '9.64'.
+B<RETURNS:> C<$scalar> containing the version as a string, something like
+C<'9.64'>.
 
 =head1 INTERACTIVE BROKERS API
 
@@ -469,7 +470,7 @@ L<http://www.interactivebrokers.com/> - The InteractiveBrokers website
 
 L<http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm> - The IB API documentation
 
-The examples/ directory of this module's distribution.
+The C<examples/> directory of this module's distribution.
 
 =head1 AUTHORS
 

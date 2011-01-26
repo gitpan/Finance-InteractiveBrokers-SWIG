@@ -22,7 +22,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;
 
 use vars qw( $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED $AUTOLOAD );
 BEGIN {
-    $VERSION   = '0.01_02';
+    $VERSION   = '0.02';
 }
 
 *TRUE      = \1;
@@ -227,9 +227,9 @@ B<RETURNS:> blessed C<$object>, or C<undef> on failure.
 Initialize the object.  When subclassing, override this (if desired),
 not L</new()>.
 
-B<ARGUMENTS:> %HASH of arguments passed into L</new()>
+B<ARGUMENTS:> C<%HASH> of arguments passed into L</new()>
 
-B<RETURNS:> %HASH of any leftover arguments.
+B<RETURNS:> C<%HASH> of any leftover arguments.
 
 =head1 METHODS
 
@@ -248,7 +248,7 @@ so you will not find C<sub> definitions in the source.
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> @ARRAY of IB API events that must be overridden.
+B<RETURNS:> C<@ARRAY> of IB API events that must be overridden.
 
 B<NOTE:> You can also get a list of them from the command line, via:
 
