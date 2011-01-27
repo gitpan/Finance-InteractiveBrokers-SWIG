@@ -10,9 +10,9 @@
 #   make -fMakefile.swig [ OPTIONS ]
 #
 # OPTIONS:
-#   IB_BUILD_PATH=/path/to/IBJts		# wherever your un-jar'ed API is
-#   SWIG=/path/to/swig					# path to SWIG binary program
-#   IB_API_VERSION=X.XX					# version of the IB API [def: 9.64]
+#   IB_BUILD_PATH=/path/to/IBJts        # wherever your un-jar'ed API is
+#   SWIG=/path/to/swig                  # path to SWIG binary program
+#   IB_API_VERSION=X.XX                 # version of the IB API [def: 9.64]
 #
 # Pre-existing files:
 #   Makefile.swig

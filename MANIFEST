@@ -1,6 +1,8 @@
 Changes
 examples/MyEventHandler.pm
 examples/api-demo.pl
+examples/show-events.pl
+examples/show-methods.pl
 ezembed.c
 ezembed.h
 IBAPI-9.64.cxx
@@ -12,6 +14,7 @@ lib/Finance/InteractiveBrokers/SWIG/EventHandler.pm
 Makefile.PL
 Makefile.swig
 MANIFEST
+LICENSE
 README
 t/00-load.t
 t/79-Finance-InteractiveBrokers-SWIG-IBAPI.t

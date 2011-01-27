@@ -14,7 +14,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-	$VERSION = '0.02';
+	$VERSION = '0.03';
 }
 
 *TRUE    = \1;
@@ -215,6 +215,10 @@ WriteMakefile(
         #   'Alien::InteractiveBrokers'     => 0,
         #) : (),
         'Alien::InteractiveBrokers'         => 0,
+    },
+    CONFIGURE_REQUIRES => {
+        'ExtUtils::MakeMaker'               => 0,
+        'Finance::InteractiveBrokers::API'  => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES =>

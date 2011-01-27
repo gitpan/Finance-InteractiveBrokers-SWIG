@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.02';
+    $VERSION  = '0.03';
 }
 
 *TRUE     = \1;
@@ -155,7 +155,7 @@ sub api_methods
 
     # Version was valid, show the methods
     if( -t STDIN and -t STDOUT ) {
-        print "IB API methods callable for API version $version:\n";
+        print "InteractiveBrokers API methods callable for API version $version:\n";
         print "    $_\n" for( @methods );
     }
 
@@ -306,7 +306,7 @@ Then:
     # And eventually...
     $ib->eDisconnect();
 
-See the C<examples/> directory in this distribution for more complete and
+See the F<examples/> directory in this distribution for more complete and
 well-commented examples.
 
 =head1 DESCRIPTION
@@ -391,7 +391,7 @@ L<Finance::InteractiveBrokers::SWIG::EventHandler>.  It is delegated to when
 receiving events from the IB service.
 
 Please see L<Finance::InteractiveBrokers::SWIG::EventHandler> for notes on
-how to subclass it, and the C<examples/> directory of this distribution.
+how to subclass it, and the F<examples/> directory of this distribution.
 
 B<RETURNS:> blessed C<$object>, or C<undef> on failure.
 
@@ -470,7 +470,7 @@ L<http://www.interactivebrokers.com/> - The InteractiveBrokers website
 
 L<http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm> - The IB API documentation
 
-The C<examples/> directory of this module's distribution.
+The F<examples/> directory of this module's distribution.
 
 =head1 AUTHORS
 

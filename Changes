@@ -7,6 +7,11 @@ NEW:    New, previously non-existent feature.
 DOC:    Changes to documentation.
 ------------------------------------------------------------
 
+0.03     2011-01-27
+         FIX: Makefile.PL, META.yml needed configure_requires => F::IB::API
+         NEW: examples/show-*.pl informational utilities for cmdline
+         DOC: Minor doc cleanup and additions
+
 0.02     2011-01-25
          First production CPAN release
          Provides interface for InteractiveBrokers API version 9.64

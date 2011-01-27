@@ -22,7 +22,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;
 
 use vars qw( $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED $AUTOLOAD );
 BEGIN {
-    $VERSION   = '0.02';
+    $VERSION   = '0.03';
 }
 
 *TRUE      = \1;
@@ -207,7 +207,7 @@ into a database, analyze, etc).
 An object of your subclass should be instantiated, and passed in as an
 argument to L<Finance::InteractiveBrokers::SWIG/"new">.
 
-There is a well-commented example subclass in the C<examples/> directory of
+There is a well-commented example subclass in the F<examples/> directory of
 this module's distribution, on which you must base your subclass.
 
 =head1 CONSTRUCTOR
@@ -260,7 +260,7 @@ B<NOTE:> You can also get a list of them from the command line, via:
 
 Get the IB API version this module was compiled against.
 
-B<RETURNS:> $scalar containing the version as a string, something like '9.64'.
+B<RETURNS:> C<$scalar> containing the version as a string, something like '9.64'.
 
 =head1 THE INTERACTIVE BROKERS API
 
@@ -290,7 +290,7 @@ L<http://www.interactivebrokers.com/> - The InteractiveBrokers website
 
 L<http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm> - The IB API documentation
 
-The examples/ directory of this module's distribution
+The F<examples/> directory of this module's distribution
 
 =head1 AUTHORS
 
