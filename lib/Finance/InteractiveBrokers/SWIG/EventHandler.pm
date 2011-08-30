@@ -22,7 +22,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;
 
 use vars qw( $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED $AUTOLOAD );
 BEGIN {
-    $VERSION   = '0.03';
+    $VERSION   = '0.03_03';
 }
 
 *TRUE      = \1;
@@ -302,6 +302,22 @@ Please report any bugs or feature requests to
 C<bug-finance-interactivebrokers-swig at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-InteractiveBrokers-SWIG>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
+
+If you are sending a bug report, please include:
+
+=over 4
+
+=item * Your OS type, version, Perl version, and other similar information.
+
+=item * The version of Finance::InteractiveBrokers::SWIG you are using.
+
+=item * The version of the InteractiveBrokers API you are using.
+
+=item * If possible, a minimal test script which demonstrates your problem.
+
+=back
+
+This will be of great assistance in troubleshooting your issue.
 
 =head1 SUPPORT
 

@@ -2,7 +2,7 @@
 # Finance::InteractiveBrokers::SWIG - Makefile for SWIG build
 #
 # Copyright (c) 2010-2011 Jason McManus
-# Version: 0.01
+# Version: 0.03_03
 #
 # This is usually invoked by 'perl Makefile.PL && make', but if you need to
 # run it separately, you can run it by:
@@ -37,17 +37,24 @@
 ### Options
 ###
 
-CC=g++
+CC=gcc
+CXX=g++
 LD=ld
 CXXEXT=cxx
-DLEXT=so
+
 SWIGEXT=i
 PMEXT=pm
 OBJEXT=o
 
+# May be different on OS-X, etc.
+DLEXT = $(shell perl -MConfig -e'print $$Config{dlext}')
+ifeq "$(DLEXT)" ""
+DLEXT = so
+endif
+
 # These should be overridden on the command-line
 SWIG=swig
-IB_BUILD_PATH=$(PROJDIR)/ass/tws_api/IBJts
+IB_BUILD_PATH=$(PROJDIR)/lib/tws_api/IBJts
 IB_API_VERSION=9.64
 BUILD_TIME=0
 
@@ -57,22 +64,29 @@ else
 DDEBUG=
 endif
 
-SOCKDIR=$(IB_BUILD_PATH)/cpp/PosixSocketClient
-INCLUDES=-I$(IB_BUILD_PATH)/cpp/Shared -I$(SOCKDIR)
-IB_API_VER=-$(IB_API_VERSION)
+OSNAME = $(shell perl -MConfig -le'print $$Config{osname}')
 
-MODBASE=Finance::InteractiveBrokers::SWIG
-MODNAME=IBAPI
-MODFULL=$(MODBASE)::$(MODNAME)
-LIBNAME=$(MODNAME).$(DLEXT)
+SOCKDIR = $(IB_BUILD_PATH)/cpp/PosixSocketClient
+INCLUDES = -I$(IB_BUILD_PATH)/cpp/Shared -I$(SOCKDIR)
+IB_API_VER = -$(IB_API_VERSION)
+
+MODBASE = Finance::InteractiveBrokers::SWIG
+MODNAME = IBAPI
+MODFULL = $(MODBASE)::$(MODNAME)
+LIBNAME = $(MODNAME).$(DLEXT)
 
 # Get the perl C opts from perl itself, and clean them up for C++
-PERLJUNK=$(shell perl -MExtUtils::Embed -e ccopts)
-PERLOPTS=$(PERLJUNK:-Wdeclaration-after-statement=)
+PERLJUNK = $(shell perl -MExtUtils::Embed -e ccopts)
+PERLOPTS = $(PERLJUNK:-Wdeclaration-after-statement=)
 
-SWIGOPTS=-c++ -perl -Wall -DBUILD_TIME=$(BUILD_TIME)
-CCOPTS=-fPIC -DBUILD_TIME=$(BUILD_TIME)
-LDOPTS=-shared -Wl,-E
+SWIGOPTS = -c++ -perl -Wall -DBUILD_TIME=$(BUILD_TIME)
+#SWIG_INCL=
+CFLAGS += -fPIC -DBUILD_TIME=$(BUILD_TIME)
+LDFLAGS += $(shell perl -MConfig -le'print $$Config{lddlflags}')
+LDFLAGS += $(shell perl -MExtUtils::Embed -e ldopts)
+ifeq "$(OSNAME)" "darwin"
+LDFLAGS += -Wl,-no_arch_warnings
+endif
 
 IBSTRING=-DIB_USE_STD_STRING
 
@@ -93,17 +107,17 @@ $(MODNAME).$(DLEXT): $(MODNAME).$(PMEXT)
 	@echo --------------------------
 	@echo Building module library...
 	@echo --------------------------
-	$(CC) $(CCOPTS) $(DDEBUG) $(INCLUDES) $(IBSTRING) $(PERLOPTS) -c $(MODNAME)$(IB_API_VER).$(CXXEXT) -o $(MODNAME).$(OBJEXT)
-	$(CC) $(CCOPTS) $(DDEBUG) $(INCLUDES) $(IBSTRING) $(PERLOPTS) -c $(MODNAME)_wrap.cxx -o $(MODNAME)_wrap.$(OBJEXT)
-	$(CC) $(CCOPTS) $(DDEBUG) $(INCLUDES) $(IBSTRING) -c $(SOCKDIR)/EClientSocketBase.cpp -o EClientSocketBase.$(OBJEXT)
-	$(CC) $(CCOPTS) $(DDEBUG) $(INCLUDES) $(IBSTRING) -c $(SOCKDIR)/EPosixClientSocket.cpp -o EPosixClientSocket.$(OBJEXT)
-	$(CC) $(LDOPTS) $(DDEBUG) -o $@ $(MODNAME).$(OBJEXT) $(MODNAME)_wrap.$(OBJEXT) EClientSocketBase.$(OBJEXT) EPosixClientSocket.$(OBJEXT)
+	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) $(PERLOPTS) -c $(MODNAME)$(IB_API_VER).$(CXXEXT) -o $(MODNAME).$(OBJEXT)
+	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) $(PERLOPTS) -c $(MODNAME)_wrap.cxx -o $(MODNAME)_wrap.$(OBJEXT)
+	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) -c $(SOCKDIR)/EClientSocketBase.cpp -o EClientSocketBase.$(OBJEXT)
+	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) -c $(SOCKDIR)/EPosixClientSocket.cpp -o EPosixClientSocket.$(OBJEXT)
+	$(CXX) $(LDFLAGS) $(DDEBUG) -o $@ $(MODNAME).$(OBJEXT) $(MODNAME)_wrap.$(OBJEXT) EClientSocketBase.$(OBJEXT) EPosixClientSocket.$(OBJEXT)
 
 $(MODNAME).$(PMEXT): $(MODNAME)$(IB_API_VER).$(SWIGEXT) $(MODNAME)$(IB_API_VER).$(CXXEXT) $(MODNAME)$(IB_API_VER).h
 	@echo --------------------------------------------
-	@echo Building SWIG interface for $(IB_API_VER)...
+	@echo Building SWIG interface for ${MODNAME}$(IB_API_VER)...
 	@echo --------------------------------------------
-	$(SWIG) $(SWIGOPTS) $(INCLUDES) -o $(MODNAME)_wrap.$(CXXEXT) $<
+	$(SWIG) $(SWIGOPTS) $(SWIG_INCL) $(INCLUDES) -o $(MODNAME)_wrap.$(CXXEXT) $<
 
 .PHONY: clean
 clean:

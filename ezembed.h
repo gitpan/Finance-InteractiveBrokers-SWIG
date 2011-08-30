@@ -6,8 +6,8 @@
  *  (Borrowed from Advanced Perl Programming, 1st Ed.)
  */
 
-#ifndef _EZEMBED_H
-#define _EZEMBED_H
+#ifndef EZEMBED_H
+#define EZEMBED_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +24,6 @@ int perl_call_va (const char *subname, ...);
 }
 #endif 
 
-#endif
+#endif /* EZEMBED_H */
 
 /* END */

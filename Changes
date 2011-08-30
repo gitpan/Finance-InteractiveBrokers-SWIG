@@ -4,8 +4,28 @@ Legend:
 BUG:    An actual found or reported bug fix.
 FIX:    Change toward correct behavior, but unreported.
 NEW:    New, previously non-existent feature.
+CHG:    Change in behavior.
+API:    Change in user-facing API (hopefully rare).
 DOC:    Changes to documentation.
 ------------------------------------------------------------
+
+0.03_03  2011-08-27
+         FIX: Fixed Config.pm handling
+         FIX: Properly imported File::Spec::Functions qw( catdir catfile )
+         FIX: Proper parameters in examples/MyEventHandler.pm
+         FIX: %INC handling more portable
+         FIX: Add typedefs for TickerId and IBString
+         FIX: Bad $LIBPATH handling in Makefile.PL
+         FIX: Better standardized Makefile.swig variables
+         FIX: Lowered required swig version to 1.3.28 after testing
+         NEW: More thorough unit tests
+         NEW: More comprehensive demo in examples/api-demo.pl
+         NEW: Added hooks for Alien::SWIG CPAN d/l during build process
+         BUG: F::IB::SWIG::_resolve_host misused Net::hostent (thanks, Uwe!)
+         BUG: F::IB::SWIG::Makefile.swig - OS-X build borked (thanks, Chris!)
+         DOC: Fixed bad function name in SWIG.pm synopsis
+         DOC: Notes on OS-X building in README
+         FIX: Added Test:More => 0.88 requirement, for done_testing()
 
 0.03     2011-01-27
          FIX: Makefile.PL, META.yml needed configure_requires => F::IB::API

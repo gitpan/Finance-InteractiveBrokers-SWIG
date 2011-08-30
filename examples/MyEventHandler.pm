@@ -32,11 +32,12 @@ package MyEventHandler;
 #
 
 use Carp qw( croak confess );
+use Data::Dumper;
 use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.03';
+    $VERSION = '0.03_03';
 }
 
 # Ours
@@ -62,7 +63,7 @@ use base qw( Finance::InteractiveBrokers::SWIG::EventHandler );
 #
 sub winError
 {
-    my( $str, $lastError ) = @_;
+    my( $self, $str, $lastError ) = @_;
 
     print "Client Error $lastError: $str\n";
 
@@ -71,9 +72,16 @@ sub winError
 
 sub error
 {
-    my( $id, $errorCode, $errorString ) = @_;
+    my( $self, $id, $errorCode, $errorString ) = @_;
 
-    print "RequestID $id has given server error $errorCode: $errorString\n";
+    if( $errorCode >= 1100 )
+    {
+        print "Server Message: code $errorCode: $errorString\n";
+    }
+    else
+    {
+        print "Server Error: ReqID $id; code $errorCode: $errorString\n";
+    }
 
     return;
 }
@@ -87,7 +95,7 @@ sub connectionClosed
 
 sub currentTime
 {
-    my( $time ) = @_;
+    my( $self, $time ) = @_;
 
     printf "Current time on IB server is: %s\n", scalar gmtime( $time );
 
@@ -97,20 +105,62 @@ sub currentTime
 #
 # Market Data
 #
+
+# Docs here:
+# http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/c/tickprice.htm
 sub tickPrice
-{}
+{
+    my( $self, $reqId, $tickType, $price, $canAutoExecute ) = @_;
+
+    printf "tickPrice for reqId %d: type %d, price %.04f, autoexecute? %s\n",
+           $reqId,
+           $tickType,
+           $price,
+           ( $canAutoExecute ? 'Yes' : 'No' );
+
+    return;
+}
 sub tickSize
-{}
+{
+    my $self = shift;
+
+    print "tickSize event; contains the following data:\n";
+    print Dumper \@_;
+
+    return;
+}
 sub tickOptionComputation
-{}
+{
+    print "tickOptionComputation\n", Dumper \@_;
+}
 sub tickGeneric
-{}
+{
+    print "tickGeneric\n", Dumper \@_;
+}
+
 sub tickString
-{}
+{
+    my $self = shift;
+
+    print "tickString event; contains the following data:\n";
+    print Dumper \@_;
+
+    return;
+}
+
 sub tickEFP
-{}
+{
+    print "tickEFP\n", Dumper \@_;
+}
+
 sub tickSnapshotEnd
-{}
+{
+    my( $self, $reqId ) = @_;
+
+    print "tickSnapshotEnd for reqID $reqId\n"; 
+
+    return;
+}
 
 #
 # Orders
@@ -176,7 +226,9 @@ sub receiveFA
 # Historical Data
 #
 sub historicalData
-{}
+{
+    print "historicalData\n", Dumper \@_;
+}
 
 #
 # Market Scanners
@@ -207,7 +259,7 @@ sub deltaNeutralValidation
 {}
 
 #
-# These are in the headers, but not documented in the IB API docs.
+# These are in the C++ headers, but not documented in the IB API docs.
 #
 sub openOrderEnd
 {}
@@ -270,6 +322,22 @@ Please report any bugs or feature requests to
 C<bug-finance-interactivebrokers-swig at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-InteractiveBrokers-SWIG>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
+
+If you are sending a bug report, please include:
+
+=over 4
+
+=item * Your OS type, version, Perl version, and other similar information.
+
+=item * The version of Finance::InteractiveBrokers::SWIG you are using.
+
+=item * The version of the InteractiveBrokers API you are using.
+
+=item * If possible, a minimal test script which demonstrates your problem.
+
+=back
+
+This will be of great assistance in troubleshooting your issue.
 
 =head1 SUPPORT
 

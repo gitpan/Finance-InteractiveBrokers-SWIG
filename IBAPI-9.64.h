@@ -4,8 +4,8 @@
  *  Copyright (c) 2010-2011 Jason McManus
  */
 
-#ifndef _IBAPI_H
-#define _IBAPI_H
+#ifndef IBAPI_H
+#define IBAPI_H
 
 // Some needed types
 #include "Contract.h"
@@ -245,6 +245,6 @@ private:
     OrderId m_orderId;
 };
 
-#endif // ifdef _IBAPI_H
+#endif // ifdef IBAPI_H
 
 /* END */

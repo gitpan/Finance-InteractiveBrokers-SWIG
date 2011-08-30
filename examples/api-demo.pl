@@ -29,7 +29,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.03';
+    $VERSION = '0.03_03';
 }
 
 # Ours
@@ -41,6 +41,10 @@ $|=1;
 ###
 ### Variables
 ###
+
+use vars qw( $TRUE $FALSE );
+*TRUE  = \1;
+*FALSE = \0;
 
 my $ibhost      = 'localhost';  # Set to your IB gateway or TWS host
 my $ibport      = 4001;         # Set to your IB gateway or TWS port
@@ -68,7 +72,7 @@ my $ibapi = Finance::InteractiveBrokers::SWIG->new(
 #
 # 3. Tell the API to connect to the IB Gateway or TWS host
 #
-print "Connecting to $ibhost:$ibport with clientID = $clientId...";
+print "Connecting to $ibhost:$ibport with clientID = $clientId... ";
 
 if( $ibapi->eConnect( $ibhost, $ibport, $clientId ) ) {
     print "Connected!\n";
@@ -89,6 +93,30 @@ print "Sending request for current server time.\n";
 $ibapi->reqCurrentTime();
 
 #
+# Let's also request a quote for MSFT
+#
+
+# Set up a contract object
+
+my $contract = Finance::InteractiveBrokers::SWIG::IBAPI::Contract->new();
+$contract->swig_symbol_set( 'MSFT' );
+$contract->swig_secType_set( 'STK' );
+$contract->swig_exchange_set( 'SMART' );
+$contract->swig_currency_set( 'USD' );
+
+# Send the request
+
+my $reqId = get_next_id();
+print "Sending snapshot request (reqId $reqId) for MSFT.\n";
+
+$ibapi->reqMktData(
+    $reqId,             # next id from the sequence generator
+    $contract,          # above contract object
+    '',                 # don't set this if snapshot (next value) is true
+    $TRUE,              # just get a snapshot and immediately cancel
+);
+
+#
 # 4. MAIN EVENT LOOP; keep going in here until ^C is pressed
 #
 print "\nLooping to wait for server responses (^C to exit)...\n";
@@ -101,12 +129,40 @@ while( $ibapi->isConnected() and not $wantstoexit )
 #
 # 5. Someone wanted to exit, let's clean up nicely.
 #
-$ibapi->eDisconnect() if( $ibapi->isConnected() );
+print "^C detected; disconnecting...\n";
+$ibapi->eDisconnect()
+    if( $ibapi->isConnected() );
 
 #
 # Bye!
 #
+print "Bye!\n";
 exit( 0 );
+
+###
+### Utility subs
+###
+
+# Just a closure to continually generate a new req id
+#
+# In a full program, these should probably be kept in a hash, with
+# the Id set to the key, and the value set to 1 (or perhaps a reqtype,
+# timestamp, or other meta information), and then deleted as the
+# responses come in, or when a cancel request is sent, depending
+# on if that's appropriate for the request or not.
+#
+# Remember, this is a low-level API.  Most of this will be done for you
+# in the eventual POE component. :-)
+#
+# See also: the IB API documentation for the reqIDs() call
+#
+{
+    my $id = 0;
+    sub get_next_id
+    {
+        return ++$id;
+    }
+}
 
 __END__
 

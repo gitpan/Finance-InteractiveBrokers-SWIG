@@ -21,7 +21,7 @@
 
 use vars qw( $VERSION $API_VERSION $BUILD_TIME );
 BEGIN {
-    $VERSION = '0.03';
+    $VERSION = '0.03_03';
 }
 
 $API_VERSION = '9.64';          # IB API version
@@ -85,6 +85,10 @@ sub build_time
 
 /* Make sure IBString is treated like std::string by SWIG */
 %apply std::string { IBString }
+typedef std::string IBString;
+
+/* typedef some other junk */
+typedef long TickerId;
 
 /* Include (and build code for) some of our types */
 %include "Contract.h"

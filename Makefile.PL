@@ -4,33 +4,37 @@
 #   (c) 2010-2011 Jason McManus
 #
 
+use 5.006;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use File::Spec ();
-use Config ();
-use Carp qw( croak confess );
+use File::Spec::Functions qw( catdir catfile );
+use Config;
+use Cwd;
+use Carp qw( carp croak confess );
 $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-	$VERSION = '0.03';
+    $VERSION = '0.03_03';
 }
 
 *TRUE    = \1;
 *FALSE   = \0;
 
-my $min_SWIG_version = '1.3.36';
+my $ALIEN_SWIG = 'Alien::SWIG';
+my $min_SWIG_version = '1.3.28';
+my( $SWIG_PATH, $SWIG_INCLUDES ) = ( '', '' );
 
 # Check for F::IB::API
 eval {
-	require Finance::InteractiveBrokers::API;
+    require Finance::InteractiveBrokers::API;
 };
 croak( '*' x 76 . "\n" .
-	   '  Cannot find Finance::InteractiveBrokers::API, required for this' .
+       '  Cannot find Finance::InteractiveBrokers::API, required for this' .
        " build.\n  Please install it from CPAN before continuing.\n" .
-	   '*' x 76 . "\n " )
-	if( $@ );
+       '*' x 76 . "\n " )
+    if( $@ );
 
 ##########################################################################
 ### Collect some configuration information from the user
@@ -68,22 +72,56 @@ If it is not installed, you can get it at: http://www.swig.org/
 
 EOM
 
-# Find and verify if location of SWIG binary
-my $SWIG_PATH = prompt( "Enter the full path to your 'swig' executable:\n",
-					    find_bin( 'swig' ) );
-
-# Skip installation running under CPANTesters and no SWIG
-if( $ENV{AUTOMATED_TESTING} and not $SWIG_PATH )
-{
-	print "\nA working installation of SWIG is required for this module.\n\n";
-	print "Thanks anyway, testers!\n\n";
-	exit( 0 );
+print " * Looking for 'swig' in your PATH... ";
+my $ver_ok;
+my $swig_bin = find_bin( 'swig' );
+if( $swig_bin ) {
+    print $swig_bin, "\n\n";
+    $ver_ok = check_swig_version( $swig_bin );
+} else {
+    print "Nope.\n\n";
 }
 
-# Check SWIG version >= $min_SWIG_version
-die "\nYour SWIG will NOT work; please (re)install a version newer than $min_SWIG_version.\n "
-	unless check_swig_version( $SWIG_PATH );
+unless( $swig_bin and $ver_ok )
+{
+    print " * Trying $ALIEN_SWIG... ";
+    eval "require $ALIEN_SWIG;";
+    if( $@ ) {
+        print "Nope.\n\n";
+    } else {
+        my $aswig = $ALIEN_SWIG->new();
+        print "Found it!  $ALIEN_SWIG ", $ALIEN_SWIG->VERSION, "\n\n";
+        $swig_bin = $aswig->executable();
+        $ver_ok = check_swig_version( $swig_bin );
+        $SWIG_INCLUDES = $aswig->includes()
+            if( $ver_ok );
+    }
+}
 
+# Find and verify if location of SWIG binary
+$swig_bin  = '' unless( defined( $swig_bin ) );
+$SWIG_PATH = prompt( "Enter/change the full path to your 'swig' program:\n>",
+                        $ver_ok ? $swig_bin : undef );
+
+print "\n";
+unless( ( ( $SWIG_PATH ) and ( $SWIG_PATH eq $swig_bin ) ) or
+        ( $ver_ok = check_swig_version( $SWIG_PATH ) ) )
+{
+    print "No good I'm afraid.  ";
+    print "We can try to get $ALIEN_SWIG from CPAN.\n\n";
+    my $get_it = prompt( "Download $ALIEN_SWIG from CPAN?", 'yes' );
+    ( $SWIG_PATH, $SWIG_INCLUDES ) = get_aswig_from_cpan()
+        if( $get_it =~ /y/ );
+
+    die "A working SWIG >= $min_SWIG_version is needed.  Cannot continue.\n "
+        unless( $SWIG_PATH );
+
+    print "\n*********************************************************************\n";
+    print "  Welcome back to the Finance::InteraactiveBrokers::SWIG installer.\n";
+    print "SWIG ", _get_swig_ver( $SWIG_PATH ),
+          " is now installed and working properly.\n";
+    print "*********************************************************************\n";
+}
 
 ###########################
 ### Find the API files
@@ -107,43 +145,43 @@ my( $LIBPATH, $IB_BUILD_PATH );
 print " * Checking the IB_LIBRARY_PATH and IB_BUILD_PATH envvars... ";
 
 if( ( $LIBPATH = found_api( $ENV{IB_BUILD_PATH} ) ) or
-	( $LIBPATH = found_api( $ENV{IB_LIBRARY_PATH} ) ) )
+    ( $LIBPATH = found_api( $ENV{IB_LIBRARY_PATH} ) ) )
 {
-	print "Found it!\n";
+    print "Found it!\n";
 }
 else
 {
-	# Next, try to find it via ibapi-config
-	print "Nope.\n\n * Trying 'ibapi-config --path'... ";
-	undef $LIBPATH;
-	if( my $ibapiconfig = find_bin( 'ibapi-config' ) )
-	{
-		$LIBPATH = `$ibapiconfig --path`;
-		chomp $LIBPATH;
-	}
-	if( found_api( $LIBPATH ) )
-	{
-		print "Found it!\n";
-	}
-	else
-	{
-		# Next, try to find it via Alien::InteractiveBrokers
-		print "Nope.\n\n * Checking if we can use Alien::InteractiveBrokers... ";
-		undef $LIBPATH;
-		eval {
-			require Alien::InteractiveBrokers;
-			$LIBPATH = Alien::InteractiveBrokers::path();
-		};
-		if( found_api( $LIBPATH ) )
-		{
-			print "Yep!\n";
-		}
-		else
-		{
-			print "Nope.\n";
-			undef $LIBPATH;
-		}
-	}
+    # Next, try to find it via ibapi-config
+    print "Nope.\n\n * Trying 'ibapi-config --path'... ";
+    undef $LIBPATH;
+    if( my $ibapiconfig = find_bin( 'ibapi-config' ) )
+    {
+        $LIBPATH = `$ibapiconfig --path`;
+        chomp $LIBPATH;
+    }
+    if( found_api( $LIBPATH ) )
+    {
+        print "Found it!\n";
+    }
+    else
+    {
+        # Next, try to find it via Alien::InteractiveBrokers
+        print "Nope.\n\n * Checking if we can use Alien::InteractiveBrokers... ";
+        undef $LIBPATH;
+        eval {
+            require Alien::InteractiveBrokers;
+            $LIBPATH = Alien::InteractiveBrokers::path();
+        };
+        if( found_api( $LIBPATH ) )
+        {
+            print "Yep!\n";
+        }
+        else
+        {
+            print "Nope.\n";
+            undef $LIBPATH;
+        }
+    }
 }
 
 if( $LIBPATH )
@@ -157,11 +195,13 @@ We have found the IB API source (version $api_ver_num) in:
 You may change locations now if you need to (otherwise just press ENTER).
 
 EOM
-}
+} else { print "\n" }
 
-my $NEWLIBPATH = prompt( "Enter the path to the IB source code:\n", 
+my $NEWLIBPATH = prompt( "Enter or confirm the path to the IB source code:\n", 
                          $LIBPATH );
 
+# http://www.cpantesters.org/cpan/report/9130b39c-2c49-11e0-b43e-04429eb006f9
+# FIXME $LIBPATH can be undef here.
 if( ( $NEWLIBPATH ne $LIBPATH ) and
     ( ! found_api( $NEWLIBPATH ) ) )
 {
@@ -204,7 +244,8 @@ WriteMakefile(
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {
-        'Test::More'                        => 0,
+		# For done_testing()
+        'Test::More'                        => '0.88',
         'Finance::InteractiveBrokers::API'  => 0,
     },
     BUILD_REQUIRES => {
@@ -222,8 +263,11 @@ WriteMakefile(
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES =>
-      'Finance-InteractiveBrokers-SWIG-* *.old IBAPI.pm IBAPI.so IBAPI_wrap.cxx'
+      'Finance-InteractiveBrokers-SWIG-* *.old IBAPI.pm IBAPI.so IBAPI.bundle IBAPI_wrap.cxx'
     },
+    test => {
+		TESTS => 't/*.t t/regression/*.t'
+	},
 );
 
 print <<"EOM";
@@ -244,119 +288,172 @@ EOM
 ### Utility subs
 ##########################################################################
 
-# Parse the path separator out of the trash that Config.pm outputs
-sub get_path_sep
+# Retrieve a var from the ginormous %Config hash
+sub get_config_var
 {
-	my( $garbage ) = Config::config_re( qr/path_sep/ );
+    my $var = shift;
 
-	my( $path_sep ) = ( $garbage =~ m/path_sep\=\'(.*)\'/ );
-
-	return( $path_sep );
+    return exists( $Config{$var} )
+             ? $Config{$var}
+             : undef;
 }
 
 # Find the specified $fname in all dirs in $ENV{PATH}
 sub find_bin
 {
-	my( $fname ) = @_;
+    my( $fname ) = @_;
 
-	my $path_sep = get_path_sep() || ':';
+    my $path_sep = get_config_var( 'path_sep' ) || ':';
 
-	my @bindirs = split( $path_sep, $ENV{PATH} );
+    my @bindirs = split( $path_sep, $ENV{PATH} );
 
-	my $binpath = '';
-	for my $dir ( @bindirs )
-	{
-		my $testpath = File::Spec->catfile( $dir, $fname );
-		$binpath = $testpath, last
-			if( -f $testpath );
-	}
+    my $binpath = '';
+    for my $dir ( @bindirs )
+    {
+        my $testpath = catfile( $dir, $fname );
+        $binpath = $testpath, last
+            if( -f $testpath );
+    }
 
-	return( $binpath );
+    return( $binpath );
 }
 
 # Get the SWIG version number from the executable
 sub check_swig_version
 {
-	my( $swig ) = @_;
+    my( $swig ) = @_;
 
-    unless( -x $swig )
-    {
-        print "\n'$swig' not found or not executable.  SWIG is required for" .
-              " this build.\n";
-        return( $FALSE );
+    return( $FALSE )
+        unless( -x $swig );
+
+    print "Checking SWIG version... ";
+
+    my $ver = _get_swig_ver( $swig );
+
+    unless( defined( $ver ) ) {
+        print "I don't think that '$swig' is actually SWIG.\n\n";
+		return( $FALSE );
     }
-	my $output = `$swig -version`;
 
-	my( $ver ) = ( $output =~ m/SWIG Version (.*)/m );
-	chomp $ver;
+    print $ver, "\n\n";
 
-	print "\nSWIG version is $ver; this is " .
-		  ( $ver ge $min_SWIG_version ? '' : 'NOT ' ) .
-		  ">= $min_SWIG_version.\n";
+    my $ok = $ver ge $min_SWIG_version;
+    printf "SWIG $ver is %srecent enough.%s\n\n",
+           $ok ? '' : 'NOT ',
+           $ok ? '  Great!' : '  You need a newer version.';
 
-	return( $ver ge $min_SWIG_version ? $TRUE : $FALSE );
+    return( $ver ge $min_SWIG_version ? $TRUE : $FALSE );
+}
+
+# Low-level, just execute and grab the ver.
+sub _get_swig_ver
+{
+    my( $path ) = @_;
+
+    my $output = eval { qx( $path -version ) };
+    return if( $@ or ! defined( $output ) );
+    my( $ver ) = ( $output =~ m/SWIG Version (.*)/m );
+    chomp $ver if( defined( $ver ) );
+
+    return( $ver );
 }
 
 # Check a few needed files in the IBJts path to see if it's sane
 sub found_api
 {
-	my( $path ) = @_;
-	return unless( $path );
+    my( $path ) = @_;
+    return unless( $path );
 
-	my $result = undef;
-	if( -e $path )
-	{
-	  # Check some files to make sure we're kinda complete
-      for my $file (
-		'cpp',
-		File::Spec->catdir(  'cpp', 'Shared' ),
-		File::Spec->catfile( 'cpp', 'Shared', 'EWrapper.h' ),
-		File::Spec->catdir(  'cpp', 'PosixSocketClient' ),
-        File::Spec->catfile( 'cpp', 'PosixSocketClient', 'EClientSocketBase.cpp' ),
-        File::Spec->catfile( 'cpp', 'PosixSocketClient', 'EPosixClientSocket.cpp' )
-		)
-      {
-		return unless( -e File::Spec->catfile( $path, $file ) );
-      }
-      $result = $path;
-	}
+    my $result = undef;
+    if( -e $path )
+    {
+        # Check some files to make sure we're kinda complete
+        for my $file (
+            'cpp',
+            catdir(  'cpp', 'Shared' ),
+            catfile( 'cpp', 'Shared', 'EWrapper.h' ),
+            catdir(  'cpp', 'PosixSocketClient' ),
+            catfile( 'cpp', 'PosixSocketClient', 'EClientSocketBase.cpp' ),
+            catfile( 'cpp', 'PosixSocketClient', 'EPosixClientSocket.cpp' ) )
+        {
+            return unless( -e catfile( $path, $file ) );
+        }
+        $result = $path;
+    }
 
-	return $result;
+    return $result;
 }
 
 # Get the IB API version number from the source code distribution
 sub get_api_version
 {
-	my( $path ) = @_;
-	return unless( $path );
+    my( $path ) = @_;
+    return unless( $path );
 
-	my $verfile = File::Spec->catfile( $path, 'API_VersionNum.txt' );
-	open my $fd, '<', $verfile or
-		return;
-	my $contents = do { local $/; <$fd> };
-	close( $fd );
+    my $verfile = catfile( $path, 'API_VersionNum.txt' );
+    open my $fd, '<', $verfile or
+        return;
+    my $contents = do { local $/; <$fd> };
+    close( $fd );
 
-	my( $vernum ) = ( $contents =~ m/API_Version=([\d.]*)/mi );
+    my( $vernum ) = ( $contents =~ m/API_Version=([\d.]*)/mi );
 
-	return( $vernum );
+    return( $vernum );
 }
 
 # Check with F::IB::API to see if we can work with $VERSION
 sub can_use_api_version
 {
-	my( $api_version ) = @_;
+    my( $api_version ) = @_;
 
-	require Finance::InteractiveBrokers::API;
-	my @ok_vers = Finance::InteractiveBrokers::API->api_versions();
+    require Finance::InteractiveBrokers::API;
+    my @ok_vers = Finance::InteractiveBrokers::API->api_versions();
 
-	die "\nSorry, this module cannot use found API version $api_version\n" .
-	    	"Usable vers are: @ok_vers\n "
-		unless( grep { $api_version } @ok_vers );
+    die "\nSorry, this module cannot use found API version $api_version\n" .
+        "Usable vers are: @ok_vers\n "
+        unless( grep { $api_version } @ok_vers );
 
-	print "\nGood, API version $api_version is usable with this module.\n";
+    print "\nGood, API version $api_version is usable with this module.\n";
 
-	return;
+    return;
 }
+
+# Get and install Alien::SWIG from CPAN, returning the executable and includes
+sub get_aswig_from_cpan
+{
+	my $origpath = getcwd();
+    eval "use CPAN;";
+    carp "Cannot 'use CPAN': $@" and return
+        if( $@ );
+
+    CPAN->import;
+    CPAN::HandleConfig->load();
+    CPAN::Shell::setup_output();
+    CPAN::Index->reload;
+
+    my $mod = CPAN::Shell->expand( 'Module', $ALIEN_SWIG );
+    carp "Couldn't find $ALIEN_SWIG on CPAN." and return
+        unless( defined( $mod ) );
+
+    if( ! $mod->uptodate )
+    {
+        $mod->install();
+        carp "Couldn't install/update $ALIEN_SWIG from CPAN." and return
+            unless( $mod->uptodate );
+    }
+
+	eval "require $ALIEN_SWIG;";
+    carp "Couldn't require $ALIEN_SWIG after CPAN install." and return
+		if( $@ );
+
+    my $aswig = $ALIEN_SWIG->new();
+
+	# I think something funky goes on with paths with the above.
+	chdir( $origpath );
+
+    return( $aswig->executable(), scalar $aswig->includes() );
+}
+
 
 
 ##########################################################################
@@ -365,47 +462,52 @@ sub can_use_api_version
 
 package MY;
 
+use File::Spec::Functions qw( catdir catfile );
+
 sub top_targets {
-	my $postamble;
+    my $postamble;
 
-	# I don't think we can get around much of this with File::Spec->catfile
+    # I don't think we can get around much of this with File::Spec->catfile
     my $S        = $^O eq 'MSWin32' ? '\\' : '/';
-	my $base_dir = File::Spec->catdir( 'Finance', 'InteractiveBrokers', 'SWIG');
-	my $lib_dir  = "\$(INST_LIB)${S}$base_dir";
-	my $auto_dir = "\$(INST_ARCHLIB)${S}" .
-				   		File::Spec->catdir( 'auto', $base_dir, 'IBAPI' );
-	my $perm_dir = $ExtUtils::MakeMaker::VERSION >= 6.52 ? '$(PERM_DIR)' :'755';
-	my $api_ver  = main::get_api_version( $IB_BUILD_PATH );
-	my $build_time = time();
+    my $base_dir = catdir( 'Finance', 'InteractiveBrokers', 'SWIG');
+    my $lib_dir  = "\$(INST_LIB)${S}$base_dir";
+    my $auto_dir = "\$(INST_ARCHLIB)${S}" . catdir( 'auto', $base_dir, 'IBAPI');
+    my $perm_dir = $ExtUtils::MakeMaker::VERSION >= 6.52 ? '$(PERM_DIR)' :'755';
+    my $api_ver  = main::get_api_version( $IB_BUILD_PATH );
+    my $build_time = time();
 
-	# Build the Makefile postamble
-	$postamble = <<"POSTAMBLE";
+    # Build the Makefile postamble
+    $postamble = <<"POSTAMBLE";
 all :: pure_all manifypods
-	\$(NOECHO) \$(NOOP)
+\t\$(NOECHO) \$(NOOP)
 
 pure_all :: config pm_to_blib swig
-	\$(NOECHO) \$(NOOP)
+\t\$(NOECHO) \$(NOOP)
 
 subdirs :: \$(MYEXTLIB)
-	\$(NOECHO) \$(NOOP)
+\t\$(NOECHO) \$(NOOP)
 
 config :: \$(FIRST_MAKEFILE) blibdirs
-	\$(NOECHO) \$(NOOP)
+\t\$(NOECHO) \$(NOOP)
 
 help :
-	perldoc ExtUtils::MakeMaker
+\tperldoc ExtUtils::MakeMaker
 
 swig :: IBAPI.\$(DLEXT)
 
 IBAPI.\$(DLEXT) :: IBAPI-$api_ver.i IBAPI-$api_ver.cxx IBAPI-$api_ver.h
-	\$(MAKE) -ef Makefile.swig "SWIG=$SWIG_PATH" "IB_BUILD_PATH=$IB_BUILD_PATH" "IB_API_VERSION=$api_ver" "BUILD_TIME=$build_time"
-	\$(MKPATH) "$lib_dir" "$auto_dir"
-	\$(CHMOD) $perm_dir "$auto_dir"
-	\$(CP) IBAPI.pm "$lib_dir"${S}
-	\$(CP) IBAPI.\$(DLEXT) "$auto_dir"${S}
+\t\$(MAKE) -ef Makefile.swig "SWIG=$SWIG_PATH" "SWIG_INCL=$SWIG_INCLUDES" "IB_BUILD_PATH=$IB_BUILD_PATH" "IB_API_VERSION=$api_ver" "BUILD_TIME=$build_time"
+\t\$(MKPATH) "$lib_dir" "$auto_dir"
+\t\$(CHMOD) $perm_dir "$auto_dir"
+\t\$(CP) IBAPI.pm "$lib_dir"${S}
+\t\$(CP) IBAPI.\$(DLEXT) "$auto_dir"${S}
+
+clean ::
+\t\$(MAKE) -ef Makefile.swig clean
+
 POSTAMBLE
 
-	return $postamble;
+    return $postamble;
 }
 
 # END

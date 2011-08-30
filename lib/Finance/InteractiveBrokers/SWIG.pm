@@ -10,7 +10,7 @@ package Finance::InteractiveBrokers::SWIG;
 use Data::Dumper;
 use Carp qw( croak confess longmess );
 use Socket qw( inet_ntoa inet_aton );
-use Net::hostent;
+use Net::hostent ();
 use strict;
 use warnings;
 
@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.03';
+    $VERSION  = '0.03_03';
 }
 
 *TRUE     = \1;
@@ -169,10 +169,10 @@ sub _resolve_host
     my $whatever = shift;
     my( $hostname, @addresses );
 
-    if( my $hent = gethostbyname( $whatever ) )
+    if( my $hent = Net::hostent::gethost( $whatever ) )
     {
         $hostname  = $hent->name;
-        @addresses = map { inet_ntoa( $_ ) } $hent->addr_list;
+        @addresses = map { inet_ntoa( $_ ) } @{ $hent->addr_list };
     }
 
     return( $hostname, @addresses );
@@ -300,7 +300,7 @@ Then:
     $ib->reqCurrentTime();
 
     # Your event loop here
-    $ib->processMessags()
+    $ib->processMessages()
         while( $ib->isConnected() );
 
     # And eventually...
@@ -354,10 +354,10 @@ Provides a programmatic means of looking up methods and events in the IB API.
 
 Capable of compiling C and C++ files, and running 'make'.
 
-=item * SWIG >= 1.3.36
+=item * SWIG >= 1.3.28
 
 The "Simplified Wrapper and Interface Generator", capable of building SWIG
-interfaces.  This module has been tested with SWIG versions 1.3.36 - 2.0.1.
+interfaces.  This module has been tested with SWIG versions 1.3.28 - 2.0.1.
 
 =back
 
@@ -482,6 +482,22 @@ Please report any bugs or feature requests to
 C<bug-finance-interactivebrokers-swig at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-InteractiveBrokers-SWIG>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
+
+If you are sending a bug report, please include:
+
+=over 4
+
+=item * Your OS type, version, Perl version, and other similar information.
+
+=item * The version of Finance::InteractiveBrokers::SWIG you are using.
+
+=item * The version of the InteractiveBrokers API you are using.
+
+=item * If possible, a minimal test script which demonstrates your problem.
+
+=back
+
+This will be of great assistance in troubleshooting your issue.
 
 =head1 SUPPORT
 
