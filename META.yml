@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Finance-InteractiveBrokers-SWIG
-version:            0.03_03
+version:            0.04
 abstract:           InteractiveBrokers API C++ wrapper and connector
 author:
     - Jason McManus <infidel AT cpan.org>

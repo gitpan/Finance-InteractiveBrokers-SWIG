@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.03_03';
+    $VERSION  = '0.04';
 }
 
 *TRUE     = \1;

@@ -2,7 +2,7 @@
 # Finance::InteractiveBrokers::SWIG - Makefile for SWIG build
 #
 # Copyright (c) 2010-2011 Jason McManus
-# Version: 0.03_03
+# Version: 0.04
 #
 # This is usually invoked by 'perl Makefile.PL && make', but if you need to
 # run it separately, you can run it by:
@@ -76,14 +76,16 @@ MODFULL = $(MODBASE)::$(MODNAME)
 LIBNAME = $(MODNAME).$(DLEXT)
 
 # Get the perl C opts from perl itself, and clean them up for C++
-PERLJUNK = $(shell perl -MExtUtils::Embed -e ccopts)
-PERLOPTS = $(PERLJUNK:-Wdeclaration-after-statement=)
+PERLOPTS := $(shell perl -MExtUtils::Embed -e ccopts)
+PERLOPTS := $(subst -Wdeclaration-after-statement,,$(PERLOPTS))
+PERLOPTS := $(subst -fstack-protector,,$(PERLOPTS))
 
 SWIGOPTS = -c++ -perl -Wall -DBUILD_TIME=$(BUILD_TIME)
 #SWIG_INCL=
 CFLAGS += -fPIC -DBUILD_TIME=$(BUILD_TIME)
 LDFLAGS += $(shell perl -MConfig -le'print $$Config{lddlflags}')
 LDFLAGS += $(shell perl -MExtUtils::Embed -e ldopts)
+LDFLAGS := $(subst -fstack-protector,,$(LDFLAGS))
 ifeq "$(OSNAME)" "darwin"
 LDFLAGS += -Wl,-no_arch_warnings
 endif
