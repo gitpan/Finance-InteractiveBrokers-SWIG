@@ -16,11 +16,14 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.04';
+    $VERSION = '0.04_01';
 }
 
 *TRUE    = \1;
 *FALSE   = \0;
+
+my $SWIG_filename = 'swig';
+$SWIG_filename .= '.exe' if( $^O eq 'MSWin32' );
 
 my $ALIEN_SWIG = 'Alien::SWIG';
 my $min_SWIG_version = '1.3.28';
@@ -74,7 +77,7 @@ EOM
 
 print " * Looking for 'swig' in your PATH... ";
 my $ver_ok;
-my $swig_bin = find_bin( 'swig' );
+my $swig_bin = find_bin( $SWIG_filename );
 if( $swig_bin ) {
     print $swig_bin, "\n\n";
     $ver_ok = check_swig_version( $swig_bin );
