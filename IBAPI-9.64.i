@@ -21,7 +21,7 @@
 
 use vars qw( $VERSION $API_VERSION $BUILD_TIME );
 BEGIN {
-    $VERSION = '0.04_01';
+    $VERSION = '0.05';
 }
 
 $API_VERSION = '9.64';          # IB API version

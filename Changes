@@ -9,6 +9,9 @@ API:    Change in user-facing API (hopefully rare).
 DOC:    Changes to documentation.
 ------------------------------------------------------------
 
+0.05     2012-03-31
+         No reported bugs on 0.04_01; bumping to an official release.
+
 0.04_01  2011-10-13
          BUG: F::IB::SWIG swig search on win32 incorrect (thanks, leosusanto!)
 
