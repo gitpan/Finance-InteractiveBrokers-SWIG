@@ -1,7 +1,7 @@
 /*
  *  Finance::InteractiveBrokers::SWIG - IB API concrete class header
  *
- *  Copyright (c) 2010-2011 Jason McManus
+ *  Copyright (c) 2010-2012 Jason McManus
  */
 
 #ifndef IBAPI_H

@@ -1,7 +1,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - Perl makefile maker
 #
-#   (c) 2010-2011 Jason McManus
+#   (c) 2010-2012 Jason McManus
 #
 
 use 5.006;
@@ -16,7 +16,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.05';
+    $VERSION = '0.06';
 }
 
 *TRUE    = \1;

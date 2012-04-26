@@ -1,7 +1,7 @@
 /*
  *  Finance::InteractiveBrokers::SWIG - IB API concrete class implementation
  *
- *  Copyright (c) 2010-2011 Jason McManus
+ *  Copyright (c) 2010-2012 Jason McManus
  */
 
 // Hard code the API version here
@@ -927,6 +927,7 @@ void IBAPIClient::updateAccountTime( const IBString& timeStamp )
     std::cout << "C++ updatePortfolio()" << std::endl;
 #endif
     perl_call_va( "Finance::InteractiveBrokers::SWIG::_event_dispatcher",
+                  "s", "updateAccountTime",
                   "s", timeStamp.c_str(),
                   NULL );
 }

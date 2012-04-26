@@ -1,7 +1,7 @@
 /* 
  * Finance::InteractiveBrokers::SWIG - SWIG interface file for IBAPI 9.64
  * 
- * Copyright (c) 2010-2011 Jason McManus
+ * Copyright (c) 2010-2012 Jason McManus
  */
 
 /*************************************************************************
@@ -21,7 +21,7 @@
 
 use vars qw( $VERSION $API_VERSION $BUILD_TIME );
 BEGIN {
-    $VERSION = '0.05';
+    $VERSION = '0.06';
 }
 
 $API_VERSION = '9.64';          # IB API version
@@ -89,6 +89,7 @@ typedef std::string IBString;
 
 /* typedef some other junk */
 typedef long TickerId;
+typedef long OrderId;
 
 /* Include (and build code for) some of our types */
 %include "Contract.h"

@@ -2,7 +2,7 @@ package Finance::InteractiveBrokers::SWIG::EventHandler;
 #
 #   Finance::InteractiveBrokers::SWIG - Event handler base class
 #
-#   Copyright (c) 2010-2011 Jason McManus
+#   Copyright (c) 2010-2012 Jason McManus
 #
 #   Full POD documentation after __END__
 #
@@ -22,7 +22,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;
 
 use vars qw( $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED $AUTOLOAD );
 BEGIN {
-    $VERSION   = '0.05';
+    $VERSION   = '0.06';
 }
 
 *TRUE      = \1;
@@ -349,7 +349,7 @@ L<http://search.cpan.org/dist/Finance-InteractiveBrokers-SWIG/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2010-2011 Jason McManus
+Copyright (c) 2010-2012 Jason McManus
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

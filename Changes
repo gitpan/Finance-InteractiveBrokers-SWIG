@@ -9,6 +9,10 @@ API:    Change in user-facing API (hopefully rare).
 DOC:    Changes to documentation.
 ------------------------------------------------------------
 
+0.06     2012-04-26
+         BUG: RT#76806 - Invalid event received - thanks, rod!
+         BUG: RT#76807 - OrderId needed to be typedefed - thanks, rod!
+
 0.05     2012-03-31
          No reported bugs on 0.04_01; bumping to an official release.
 
