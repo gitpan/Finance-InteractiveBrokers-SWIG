@@ -23,7 +23,7 @@ use TestUtil;
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.06';
+$VERSION = '0.06_01';
 *TRUE    = \1;
 *FALSE   = \0;
 

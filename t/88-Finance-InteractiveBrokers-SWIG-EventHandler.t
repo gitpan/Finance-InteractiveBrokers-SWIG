@@ -22,7 +22,7 @@ use lib 't/inc';                                # for TestEventHandler.pm
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.06';
+$VERSION = '0.06_01';
 *TRUE    = \1;
 *FALSE   = \0;
 

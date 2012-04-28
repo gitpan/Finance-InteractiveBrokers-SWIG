@@ -19,7 +19,7 @@ use Finance::InteractiveBrokers::API;
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.06';
+$VERSION = '0.06_01';
 *TRUE    = \1;
 *FALSE   = \0;
 
@@ -114,6 +114,14 @@ can_ok( 'Finance::InteractiveBrokers::SWIG::IBAPI::ScannerSubscription', 'DESTRO
 can_ok( 'Finance::InteractiveBrokers::SWIG::IBAPI::ScannerSubscription', 'DISOWN' );
 can_ok( 'Finance::InteractiveBrokers::SWIG::IBAPI::ScannerSubscription', 'ACQUIRE' );
 
+if( $api_version >= 9.67 )
+{
+    can_ok( 'Finance::InteractiveBrokers::SWIG::IBAPI::CommissionReport', 'new' );
+    can_ok( 'Finance::InteractiveBrokers::SWIG::IBAPI::CommissionReport', 'DESTROY' );
+    can_ok( 'Finance::InteractiveBrokers::SWIG::IBAPI::CommissionReport', 'DISOWN' );
+    can_ok( 'Finance::InteractiveBrokers::SWIG::IBAPI::CommissionReport', 'ACQUIRE' );
+}
+
 ################################################################
 # Test: all methods callable
 # Expected: PASS
@@ -147,7 +155,12 @@ for my $event ( @events )
 ###
 ### Output the calculated test count
 ###
-done_testing( 1 + 4 + 46 + scalar( @methods ) + scalar( @events ) );
+done_testing( 1 +
+              4 +
+              46 +
+              ( ( $api_version >= 9.67 ) ? 4 : 0 ) +
+              scalar( @methods ) +
+              scalar( @events ) );
 
 # Always return true
 1;

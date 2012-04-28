@@ -4,10 +4,15 @@
  *  Copyright (c) 2010-2012 Jason McManus
  */
 
-// Hard code the API version here
-#define IB_API_VERSION "9.64"
+#ifndef IB_API_VERSION
+# error IB_API_VERSION must be defined.
+#endif
 
-// Include a build time for this library, if not externally defined
+#ifndef IB_API_INTVER
+# error IB_API_INTVER must be defined.
+#endif
+
+// Include a default build time for this library, if not externally defined
 #ifndef BUILD_TIME
 #define BUILD_TIME 0
 #endif
@@ -16,7 +21,7 @@
 #include "ezembed.h"
 
 // Headers for F::IB::SWIG concrete class declarations
-#include "IBAPI-9.64.h"
+#include "IBAPI.h"
 
 // Headers for the IB API
 #include "EWrapper.h"
@@ -29,6 +34,10 @@
 #include "OrderState.h"
 #include "Execution.h"
 #include "ScannerSubscription.h"
+
+#if IB_API_INTVER >= 967
+#include "CommissionReport.h"
+#endif
 
 const int PING_DEADLINE       = 5;  // seconds
 const int SLEEP_BETWEEN_PINGS = 30; // seconds
@@ -62,9 +71,16 @@ IBAPIClient::~IBAPIClient()
 
 // get the API version
 // DONE
-const char *IBAPIClient::version()
+double IBAPIClient::version()
 {
     return IB_API_VERSION;
+}
+
+// get an integral API version
+// DONE
+int IBAPIClient::version_int()
+{
+    return IB_API_INTVER;
 }
 
 // get the build time for this library
@@ -300,6 +316,18 @@ void IBAPIClient::cancelCalculateImpliedVolatility( TickerId reqId )
     m_pClient->cancelCalculateImpliedVolatility( reqId );
 }
 
+#if IB_API_INTVER >= 966
+// DONE
+void IBAPIClient::reqMarketDataType( int marketDataType )
+{
+#ifdef DEBUG
+    std::cout << "C++ reqMarketDataType()" << std::endl;
+#endif
+    m_pClient->reqMarketDataType( marketDataType );
+}
+#endif
+
+
 // DONE
 void IBAPIClient::calculateOptionPrice( TickerId reqId,
                                         const Contract &contract,
@@ -393,6 +421,17 @@ void IBAPIClient::exerciseOptions( TickerId id, const Contract &contract,
                                 exerciseAction, exerciseQuantity,
                                 account, override );
 }
+
+#if IB_API_INTVER >= 966
+// UNDOCUMENTED
+void IBAPIClient::reqGlobalCancel()
+{
+#ifdef DEBUG
+    std::cout << "C++ reqGlobalCancel()" << std::endl;
+#endif
+    m_pClient->reqGlobalCancel();
+}
+#endif
 
 
 ///////////////////////////////////////////////
@@ -820,6 +859,21 @@ void IBAPIClient::tickSnapshotEnd( int reqId )
                   NULL );
 }
 
+#if IB_API_INTVER >= 966
+// DONE
+void IBAPIClient::marketDataType( TickerId reqId, int marketDataType )
+{
+#ifdef DEBUG
+    std::cout << "C++ marketDataType()" << std::endl;
+#endif
+    perl_call_va( "Finance::InteractiveBrokers::SWIG::_event_dispatcher",
+                  "s", "marketDataType",
+                  "i", reqId,
+                  "i", marketDataType,
+                  NULL );
+}
+#endif
+
 
 ///////////////////////////////////////////////
 // Orders
@@ -1027,6 +1081,20 @@ void IBAPIClient::execDetailsEnd( int reqId )
                   "i", reqId,
                   NULL );
 }
+
+#if IB_API_INTVER >= 967
+// DONE
+void IBAPIClient::commissionReport( const CommissionReport &commissionReport )
+{
+#ifdef DEBUG
+    std::cout << "C++ commissionReport()" << std::endl;
+#endif
+    perl_call_va( "Finance::InteractiveBrokers::SWIG::_event_dispatcher",
+                  "s", "commissionReport",
+                  "m", &commissionReport,
+                  NULL );
+}
+#endif
 
 
 ///////////////////////////////////////////////

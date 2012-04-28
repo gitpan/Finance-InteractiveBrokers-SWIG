@@ -19,7 +19,7 @@ use base qw( Finance::InteractiveBrokers::SWIG::EventHandler );
 
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.06';
+    $VERSION = '0.06_01';
 }
 
 ###
@@ -77,6 +77,12 @@ sub deltaNeutralValidation { pass( 'TestEventHandler: deltaNeutralValidation' );
 # These are in the headers, but not documented in the IB API docs
 sub openOrderEnd          { pass( 'TestEventHandler: openOrderEnd' ); }
 sub accountDownloadEnd    { pass( 'TestEventHandler: accountDownloadEnd' ); }
+
+# This is new as of 9.66
+sub marketDataType        { pass( 'TestEventHandler: marketDataType' ); }
+
+# This is new as of 9.67
+sub commissionReport      { pass( 'TestEventHandler: commissionReport' ); }
 
 1;
 

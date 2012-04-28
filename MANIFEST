@@ -5,9 +5,9 @@ examples/show-events.pl
 examples/show-methods.pl
 ezembed.c
 ezembed.h
-IBAPI-9.64.cxx
-IBAPI-9.64.h
-IBAPI-9.64.i
+IBAPI.cxx
+IBAPI.h
+IBAPI.i
 ignore.txt
 lib/Finance/InteractiveBrokers/SWIG.pm
 lib/Finance/InteractiveBrokers/SWIG/EventHandler.pm

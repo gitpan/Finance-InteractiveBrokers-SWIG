@@ -4,16 +4,29 @@
  *  Copyright (c) 2010-2012 Jason McManus
  */
 
+#ifndef IB_API_VERSION
+# error IB_API_VERSION must be defined.
+#endif
+
+#ifndef IB_API_INTVER
+# error IB_API_INTVER must be defined.
+#endif
+
 #ifndef IBAPI_H
 #define IBAPI_H
 
 // Some needed types
 #include "Contract.h"
 #include "Order.h"
+#include "OrderState.h"
 #include "Execution.h"
 #include "ScannerSubscription.h"
 
-// Our base class
+#if IB_API_INTVER >= 967
+#include "CommissionReport.h"
+#endif
+
+// Our base class, from the IB API
 #include "EWrapper.h"
 
 #include <iostream>
@@ -49,7 +62,9 @@ public:
     // loop message-receiver function
     void processMessages();
     // get the API version
-    const char *version();
+    double version();
+    // get an integral API version
+    int version_int();
     // get the build time of this library
     int build_time();
 
@@ -78,6 +93,10 @@ public:
                                double volatility, double underPrice );
     void cancelCalculateOptionPrice( TickerId reqId );
 
+#if IB_API_INTVER >= 966
+    void reqMarketDataType( int marketDataType );
+#endif
+
     // Orders    
     void placeOrder( OrderId id, const Contract &contract, const Order &order );
     void cancelOrder( OrderId id );
@@ -88,6 +107,10 @@ public:
     void exerciseOptions( TickerId id, const Contract &contract,
                           int exerciseAction, int exerciseQuantity,
                           const IBString &account, int override );
+#if IB_API_INTVER >= 966
+    // UNDOCUMENTED
+    void reqGlobalCancel();
+#endif
 
     // Account
     void reqAccountUpdates( bool subscribe, const IBString& acctCode );
@@ -164,6 +187,9 @@ public:
                   const IBString& futureExpiry, double dividendImpact,
                   double dividendsToExpiry );
     void tickSnapshotEnd( int reqId );
+#if IB_API_INTVER >= 966
+    void marketDataType( TickerId reqId, int marketDataType );
+#endif
 
     // Order events
     void orderStatus( OrderId orderId, const IBString& status,
@@ -199,6 +225,9 @@ public:
     void execDetails( int reqId, const Contract& contract,
                       const Execution& execution );
     void execDetailsEnd( int reqId );
+#if IB_API_INTVER >= 967
+    void commissionReport( const CommissionReport &commissionReport );
+#endif
 
     // Market Depth events
     void updateMktDepth( TickerId id, int position, int operation, int side,

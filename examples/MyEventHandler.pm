@@ -37,7 +37,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.06';
+    $VERSION = '0.06_01';
 }
 
 # Ours
@@ -162,6 +162,10 @@ sub tickSnapshotEnd
     return;
 }
 
+# IB API >= v9.66
+sub marketDataType
+{}
+
 #
 # Orders
 #
@@ -204,6 +208,9 @@ sub bondContractDetails
 sub execDetails
 {}
 sub execDetailsEnd
+{}
+# IB API >= 9.67
+sub commissionReport
 {}
 
 #

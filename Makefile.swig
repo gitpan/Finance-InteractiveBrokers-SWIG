@@ -2,7 +2,7 @@
 # Finance::InteractiveBrokers::SWIG - Makefile for SWIG build
 #
 # Copyright (c) 2010-2012 Jason McManus
-# Version: 0.06
+# Version: 0.06_01
 #
 # This is usually invoked by 'perl Makefile.PL && make', but if you need to
 # run it separately, you can run it by:
@@ -16,9 +16,9 @@
 #
 # Pre-existing files:
 #   Makefile.swig
-#   IBAPI-VER.i
-#   IBAPI-VER.cxx
-#   IBAPI-VER.h
+#   IBAPI.i
+#   IBAPI.cxx
+#   IBAPI.h
 #   ezembed.h
 #   $IB_BUILD_PATH/cpp/PosixSocketClient/EClientSocketBase.cpp
 #   $IB_BUILD_PATH/cpp/PosixSocketClient/EPosixClientSocket.cpp
@@ -57,6 +57,7 @@ SWIG=swig
 IB_BUILD_PATH=$(PROJDIR)/lib/tws_api/IBJts
 IB_API_VERSION=9.64
 BUILD_TIME=0
+IB_API_INTVER=$(subst .,,$(IB_API_VERSION))
 
 ifdef DEBUG
 DDEBUG=-DDEBUG
@@ -68,7 +69,6 @@ OSNAME = $(shell perl -MConfig -le'print $$Config{osname}')
 
 SOCKDIR = $(IB_BUILD_PATH)/cpp/PosixSocketClient
 INCLUDES = -I$(IB_BUILD_PATH)/cpp/Shared -I$(SOCKDIR)
-IB_API_VER = -$(IB_API_VERSION)
 
 MODBASE = Finance::InteractiveBrokers::SWIG
 MODNAME = IBAPI
@@ -80,9 +80,15 @@ PERLOPTS := $(shell perl -MExtUtils::Embed -e ccopts)
 PERLOPTS := $(subst -Wdeclaration-after-statement,,$(PERLOPTS))
 PERLOPTS := $(subst -fstack-protector,,$(PERLOPTS))
 
-SWIGOPTS = -c++ -perl -Wall -DBUILD_TIME=$(BUILD_TIME)
+SWIGOPTS = -c++ -perl -Wall \
+		   -DIB_API_VERSION=$(IB_API_VERSION) \
+		   -DIB_API_INTVER=$(IB_API_INTVER) \
+		   -DBUILD_TIME=$(BUILD_TIME)
 #SWIG_INCL=
-CFLAGS += -fPIC -DBUILD_TIME=$(BUILD_TIME)
+CFLAGS += -fPIC \
+		  -DIB_API_VERSION=$(IB_API_VERSION) \
+		  -DIB_API_INTVER=$(IB_API_INTVER) \
+		  -DBUILD_TIME=$(BUILD_TIME)
 LDFLAGS += $(shell perl -MConfig -le'print $$Config{lddlflags}')
 LDFLAGS += $(shell perl -MExtUtils::Embed -e ldopts)
 LDFLAGS := $(subst -fstack-protector,,$(LDFLAGS))
@@ -109,15 +115,15 @@ $(MODNAME).$(DLEXT): $(MODNAME).$(PMEXT)
 	@echo --------------------------
 	@echo Building module library...
 	@echo --------------------------
-	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) $(PERLOPTS) -c $(MODNAME)$(IB_API_VER).$(CXXEXT) -o $(MODNAME).$(OBJEXT)
+	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) $(PERLOPTS) -c $(MODNAME).$(CXXEXT) -o $(MODNAME).$(OBJEXT)
 	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) $(PERLOPTS) -c $(MODNAME)_wrap.cxx -o $(MODNAME)_wrap.$(OBJEXT)
 	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) -c $(SOCKDIR)/EClientSocketBase.cpp -o EClientSocketBase.$(OBJEXT)
 	$(CXX) $(CFLAGS) $(DDEBUG) $(INCLUDES) $(IBSTRING) -c $(SOCKDIR)/EPosixClientSocket.cpp -o EPosixClientSocket.$(OBJEXT)
 	$(CXX) $(LDFLAGS) $(DDEBUG) -o $@ $(MODNAME).$(OBJEXT) $(MODNAME)_wrap.$(OBJEXT) EClientSocketBase.$(OBJEXT) EPosixClientSocket.$(OBJEXT)
 
-$(MODNAME).$(PMEXT): $(MODNAME)$(IB_API_VER).$(SWIGEXT) $(MODNAME)$(IB_API_VER).$(CXXEXT) $(MODNAME)$(IB_API_VER).h
+$(MODNAME).$(PMEXT): $(MODNAME).$(SWIGEXT) $(MODNAME).$(CXXEXT) $(MODNAME).h
 	@echo --------------------------------------------
-	@echo Building SWIG interface for ${MODNAME}$(IB_API_VER)...
+	@echo Building SWIG interface for ${MODNAME}...
 	@echo --------------------------------------------
 	$(SWIG) $(SWIGOPTS) $(SWIG_INCL) $(INCLUDES) -o $(MODNAME)_wrap.$(CXXEXT) $<
 

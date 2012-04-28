@@ -9,6 +9,12 @@ API:    Change in user-facing API (hopefully rare).
 DOC:    Changes to documentation.
 ------------------------------------------------------------
 
+0.06_01  2012-04-29
+         NEW: Added support for IB API v9.65-9.67
+         NEW: 9.66 supports reqMarketDataType method and marketDataType event
+         NEW: 9.67 supports commissionReport event
+         API: version() now returns a double (shouldn't affect Perl)
+
 0.06     2012-04-26
          BUG: RT#76806 - Invalid event received - thanks, rod!
          BUG: RT#76807 - OrderId needed to be typedefed - thanks, rod!

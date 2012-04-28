@@ -7,17 +7,18 @@
  *  (Borrowed from Advanced Perl Programming, 1st Ed.)
  */
 
-/* Standard Perl junk */
-/*
-#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
-#include <perl.h>
-*/
 #include <string.h>
 
 /* Our header */
 #include "ezembed.h"
+
+#ifndef IB_API_VERSION
+# error IB_API_VERSION must be defined.
+#endif
+
+#ifndef IB_API_INTVER
+# error IB_API_INTVER must be defined.
+#endif
 
 /* Main function: perl_call_va() - call this from other code, with the
    fully-qualified package::name of the Perl function you wish to call,
@@ -64,9 +65,9 @@ perl_call_va (const char *subname, ...)
             } else {
                 str = va_arg(vl, char *);
 #ifdef DEBUG
-         printf ("IN: String %s\n", str);
+                printf ("IN: String %s\n", str);
 #endif
-         ii = strlen(str);
+                ii = strlen(str);
                 XPUSHs(sv_2mortal(newSVpv(str,ii)));
             }
             break;
@@ -89,11 +90,11 @@ perl_call_va (const char *subname, ...)
                 op[nret].pdata = (void*) va_arg(vl, double *);
                 op[nret++].type = 'f';
             } else {
-               d = va_arg(vl, double);
+                d = va_arg(vl, double);
 #ifdef DEBUG
-               printf ("IN: Double %f\n", d);
+                printf ("IN: Double %f\n", d);
 #endif
-               XPUSHs(sv_2mortal(newSVnv(d)));
+                XPUSHs(sv_2mortal(newSVnv(d)));
             }
             break;
         /*********************************************************/
@@ -166,6 +167,19 @@ perl_call_va (const char *subname, ...)
                           SWIG_OWNER | SWIG_SHADOW );
             XPUSHs( obj );
             break;
+#if IB_API_INTVER >= 967
+        // CommissionReport
+        case 'm' :
+            obj = newSV( 0 );
+            SWIG_MakePtr( obj,
+                          SWIG_as_voidptr(
+                              (void*) va_arg( vl, CommissionReport * )
+                          ),
+                          SWIGTYPE_p_CommissionReport,
+                          SWIG_OWNER | SWIG_SHADOW );
+            XPUSHs( obj );
+            break;
+#endif
         // out parameter(s)
         case 'O' :
             out = 1;  /* Out parameters starting */

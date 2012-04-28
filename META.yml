@@ -4,7 +4,7 @@ author:
   - 'Jason McManus <infidel AT cpan.org>'
 build_requires:
   Alien::InteractiveBrokers: 0
-  Finance::InteractiveBrokers::API: 0
+  Finance::InteractiveBrokers::API: 0.02_03
 configure_requires:
   ExtUtils::MakeMaker: 0
   Finance::InteractiveBrokers::API: 0
@@ -20,6 +20,6 @@ no_index:
     - t
     - inc
 requires:
-  Finance::InteractiveBrokers::API: 0
+  Finance::InteractiveBrokers::API: 0.02_03
   Test::More: 0.88
-version: 0.06
+version: 0.06_01

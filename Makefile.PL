@@ -16,7 +16,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.06';
+    $VERSION = '0.06_01';
 }
 
 *TRUE    = \1;
@@ -249,10 +249,10 @@ WriteMakefile(
     PREREQ_PM => {
 		# For done_testing()
         'Test::More'                        => '0.88',
-        'Finance::InteractiveBrokers::API'  => 0,
+        'Finance::InteractiveBrokers::API'  => '0.02_03',
     },
     BUILD_REQUIRES => {
-        'Finance::InteractiveBrokers::API'  => 0,
+        'Finance::InteractiveBrokers::API'  => '0.02_03',
         # Catch CPANTesters and install the IB libs
         # XXX: Nah, this won't work, already too late for 'make dist'
         #$ENV{AUTOMATED_TESTING} ? (
@@ -477,6 +477,8 @@ sub top_targets {
     my $auto_dir = "\$(INST_ARCHLIB)${S}" . catdir( 'auto', $base_dir, 'IBAPI');
     my $perm_dir = $ExtUtils::MakeMaker::VERSION >= 6.52 ? '$(PERM_DIR)' :'755';
     my $api_ver  = main::get_api_version( $IB_BUILD_PATH );
+	my $api_int  = $api_ver;
+	$api_int =~ s/\.//;
     my $build_time = time();
 
     # Build the Makefile postamble
@@ -498,8 +500,8 @@ help :
 
 swig :: IBAPI.\$(DLEXT)
 
-IBAPI.\$(DLEXT) :: IBAPI-$api_ver.i IBAPI-$api_ver.cxx IBAPI-$api_ver.h
-\t\$(MAKE) -ef Makefile.swig "SWIG=$SWIG_PATH" "SWIG_INCL=$SWIG_INCLUDES" "IB_BUILD_PATH=$IB_BUILD_PATH" "IB_API_VERSION=$api_ver" "BUILD_TIME=$build_time"
+IBAPI.\$(DLEXT) :: IBAPI.i IBAPI.cxx IBAPI.h
+\t\$(MAKE) -ef Makefile.swig "SWIG=$SWIG_PATH" "SWIG_INCL=$SWIG_INCLUDES" "IB_BUILD_PATH=$IB_BUILD_PATH" "IB_API_VERSION=$api_ver" "BUILD_TIME=$build_time" "IB_PI_INTVER=$api_int"
 \t\$(MKPATH) "$lib_dir" "$auto_dir"
 \t\$(CHMOD) $perm_dir "$auto_dir"
 \t\$(CP) IBAPI.pm "$lib_dir"${S}

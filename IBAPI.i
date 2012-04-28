@@ -4,6 +4,14 @@
  * Copyright (c) 2010-2012 Jason McManus
  */
 
+#ifndef IB_API_VERSION
+# error IB_API_VERSION must be defined.
+#endif
+
+#ifndef IB_API_INTVER
+# error IB_API_INTVER must be defined.
+#endif
+
 /*************************************************************************
  * Resulting full (base) module name for main .pm file
  */
@@ -21,10 +29,11 @@
 
 use vars qw( $VERSION $API_VERSION $BUILD_TIME );
 BEGIN {
-    $VERSION = '0.06';
+    $VERSION = '0.06_01';
 }
 
-$API_VERSION = '9.64';          # IB API version
+$API_VERSION = IB_API_VERSION;  # IB API version
+$API_INTVER  = IB_API_INTVER;   # IB API integral version
 #ifdef BUILD_TIME
 $BUILD_TIME  = BUILD_TIME;      # Build time for this library
 #else
@@ -33,12 +42,17 @@ $BUILD_TIME  = 0;               # Default build time
 
 sub api_version
 {
-    return( $API_VERSION );
+    return $API_VERSION;
+}
+
+sub api_intver
+{
+    return $API_INTVER;
 }
 
 sub build_time
 {
-    return( $BUILD_TIME );
+    return $BUILD_TIME;
 }
 
 }
@@ -60,7 +74,11 @@ sub build_time
 #include "Execution.h"
 #include "ScannerSubscription.h"
 
-#include "IBAPI-9.64.h"
+#if IB_API_INTVER >= 967
+#include "CommissionReport.h"
+#endif
+
+#include "IBAPI.h"
 %}
 
 
@@ -97,6 +115,10 @@ typedef long OrderId;
 %include "OrderState.h"
 %include "Execution.h"
 %include "ScannerSubscription.h"
+
+#if IB_API_INTVER >= 967
+%include "CommissionReport.h"
+#endif
 
 /* Import, but dont include, some needed header declarations */
 %import "EWrapper.h"
@@ -153,8 +175,16 @@ typedef long OrderId;
 %ignore "IBAPIClient::accountDownloadEnd";
 %ignore "IBAPIClient::nextValidId";
 
+#if IB_API_INTVER >= 966
+%ignore "IBAPIClient::marketDataType";
+#endif
+
+#if IB_API_INTVER >= 967
+%ignore "IBAPIClient::commissionReport";
+#endif
+
 /* Finally, just suck in our own header file */
-%include "IBAPI-9.64.h"
+%include "IBAPI.h"
 
 
 /* END */
