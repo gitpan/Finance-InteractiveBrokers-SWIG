@@ -16,7 +16,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.06_01';
+    $VERSION = '0.07';
 }
 
 *TRUE    = \1;
@@ -28,6 +28,10 @@ $SWIG_filename .= '.exe' if( $^O eq 'MSWin32' );
 my $ALIEN_SWIG = 'Alien::SWIG';
 my $min_SWIG_version = '1.3.28';
 my( $SWIG_PATH, $SWIG_INCLUDES ) = ( '', '' );
+
+my @broken_compilers = qw(
+	i686-apple-darwin11-llvm-g++-4.2
+);
 
 # Check for F::IB::API
 eval {
@@ -69,7 +73,7 @@ print <<"EOM";
 ---------------------------------------
 
 This build requires SWIG (the Simplified Wrapper and Interface Generator)
-for building the connection to the IB libraries.
+for building the connection to the IB C++ libraries.
 
 If it is not installed, you can get it at: http://www.swig.org/
 
@@ -457,6 +461,54 @@ sub get_aswig_from_cpan
     return( $aswig->executable(), scalar $aswig->includes() );
 }
 
+sub get_cxx_fix
+{
+	my $quiet = shift;
+	return unless $^O eq 'darwin';
+	my $cxx_verstring = `g++ --version`;
+	my( $cxx_version ) = $cxx_verstring =~ m#^(\S+)#;
+
+	return unless( grep { /\Q$cxx_version\E/ } @broken_compilers );
+	unless( $quiet )
+	{
+		print <<"EOWHINE";
+
+*************************************************************************
+
+	!!! BROKEN COMPILER !!!
+
+	Your C++ compiler ($cxx_version) is BROKEN.
+
+	The g++ on Darwin with XCode 4.1 and 4.2 produces invalid output.
+
+	You should upgrade to the latest OS-X developer tools.
+
+EOWHINE
+	}
+
+	my $gpp = find_bin( 'g++-4.2' );
+
+	if( -x $gpp ) {
+		print <<"EOWHINE";
+
+	Found a possible replacement: $gpp
+
+	Will try to continue using that.
+
+*************************************************************************
+EOWHINE
+		return "CC=$gpp";
+	} else {
+		print <<"EOWHINE";
+	No suitable replacement was found.  Aborting.
+
+*************************************************************************
+EOWHINE
+		die "BROKEN COMPILER; cannot continue.";
+	}
+
+	return;
+}
 
 
 ##########################################################################
@@ -477,6 +529,7 @@ sub top_targets {
     my $auto_dir = "\$(INST_ARCHLIB)${S}" . catdir( 'auto', $base_dir, 'IBAPI');
     my $perm_dir = $ExtUtils::MakeMaker::VERSION >= 6.52 ? '$(PERM_DIR)' :'755';
     my $api_ver  = main::get_api_version( $IB_BUILD_PATH );
+	my $CXX_FIX  = main::get_cxx_fix() || '';
 	my $api_int  = $api_ver;
 	$api_int =~ s/\.//;
     my $build_time = time();
@@ -501,7 +554,7 @@ help :
 swig :: IBAPI.\$(DLEXT)
 
 IBAPI.\$(DLEXT) :: IBAPI.i IBAPI.cxx IBAPI.h
-\t\$(MAKE) -ef Makefile.swig "SWIG=$SWIG_PATH" "SWIG_INCL=$SWIG_INCLUDES" "IB_BUILD_PATH=$IB_BUILD_PATH" "IB_API_VERSION=$api_ver" "BUILD_TIME=$build_time" "IB_PI_INTVER=$api_int"
+\t$CXX_FIX\$(MAKE) -ef Makefile.swig "SWIG=$SWIG_PATH" "SWIG_INCL=$SWIG_INCLUDES" "IB_BUILD_PATH=$IB_BUILD_PATH" "IB_API_VERSION=$api_ver" "BUILD_TIME=$build_time" "IB_PI_INTVER=$api_int"
 \t\$(MKPATH) "$lib_dir" "$auto_dir"
 \t\$(CHMOD) $perm_dir "$auto_dir"
 \t\$(CP) IBAPI.pm "$lib_dir"${S}

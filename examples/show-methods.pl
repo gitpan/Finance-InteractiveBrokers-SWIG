@@ -12,7 +12,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.06_01';
+    $VERSION = '0.07';
 }
 $|=1;
 

@@ -9,6 +9,12 @@ API:    Change in user-facing API (hopefully rare).
 DOC:    Changes to documentation.
 ------------------------------------------------------------
 
+0.07     2012-08-04
+         Bump to production release
+
+0.06_02  2012-05-02
+         BUG: RT#76932 - OS-X segfault - ExtUtils::Embed is made of lies.
+
 0.06_01  2012-04-29
          NEW: Added support for IB API v9.65-9.67
          NEW: 9.66 supports reqMarketDataType method and marketDataType event

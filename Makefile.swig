@@ -2,7 +2,7 @@
 # Finance::InteractiveBrokers::SWIG - Makefile for SWIG build
 #
 # Copyright (c) 2010-2012 Jason McManus
-# Version: 0.06_01
+# Version: 0.07
 #
 # This is usually invoked by 'perl Makefile.PL && make', but if you need to
 # run it separately, you can run it by:
@@ -55,7 +55,7 @@ endif
 # These should be overridden on the command-line
 SWIG=swig
 IB_BUILD_PATH=$(PROJDIR)/lib/tws_api/IBJts
-IB_API_VERSION=9.64
+IB_API_VERSION=9.66
 BUILD_TIME=0
 IB_API_INTVER=$(subst .,,$(IB_API_VERSION))
 
@@ -92,6 +92,14 @@ CFLAGS += -fPIC \
 LDFLAGS += $(shell perl -MConfig -le'print $$Config{lddlflags}')
 LDFLAGS += $(shell perl -MExtUtils::Embed -e ldopts)
 LDFLAGS := $(subst -fstack-protector,,$(LDFLAGS))
+
+# Workaround for ExtUtils::Embed being made of lies
+LIBPERL := $(shell perl -MConfig -le'print $$Config{libperl}')
+DYNEXT := $(shell perl -MConfig -le'print $$Config{so}')
+ifneq "$(LIBPERL)" "libperl.$(DYNEXT)"
+LDFLAGS := $(subst -lperl,,$(LDFLAGS))
+endif
+
 ifeq "$(OSNAME)" "darwin"
 LDFLAGS += -Wl,-no_arch_warnings
 endif
