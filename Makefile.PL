@@ -16,7 +16,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.07';
+    $VERSION = '0.08';
 }
 
 *TRUE    = \1;
@@ -26,7 +26,7 @@ my $SWIG_filename = 'swig';
 $SWIG_filename .= '.exe' if( $^O eq 'MSWin32' );
 
 my $ALIEN_SWIG = 'Alien::SWIG';
-my $min_SWIG_version = '1.3.28';
+my $min_SWIG_version = '1.3.33';
 my( $SWIG_PATH, $SWIG_INCLUDES ) = ( '', '' );
 
 my @broken_compilers = qw(

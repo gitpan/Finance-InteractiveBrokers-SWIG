@@ -19,7 +19,7 @@ use base qw( Finance::InteractiveBrokers::SWIG::EventHandler );
 
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.07';
+    $VERSION = '0.08';
 }
 
 ###

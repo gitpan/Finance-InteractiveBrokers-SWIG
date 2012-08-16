@@ -22,7 +22,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;
 
 use vars qw( $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED $AUTOLOAD );
 BEGIN {
-    $VERSION   = '0.07';
+    $VERSION   = '0.08';
 }
 
 *TRUE      = \1;

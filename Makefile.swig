@@ -2,7 +2,7 @@
 # Finance::InteractiveBrokers::SWIG - Makefile for SWIG build
 #
 # Copyright (c) 2010-2012 Jason McManus
-# Version: 0.07
+# Version: 0.08
 #
 # This is usually invoked by 'perl Makefile.PL && make', but if you need to
 # run it separately, you can run it by:
