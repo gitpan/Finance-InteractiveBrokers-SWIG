@@ -1,7 +1,7 @@
 /*
  *  Finance::InteractiveBrokers::SWIG - IB API concrete class implementation
  *
- *  Copyright (c) 2010-2012 Jason McManus
+ *  Copyright (c) 2010-2013 Jason McManus
  */
 
 #ifndef IB_API_VERSION
@@ -140,6 +140,7 @@ void IBAPIClient::processMessages()
 
         FD_CLR( m_pClient->fd(), &errorSet );
 
+        errno = 0;      // bug fix: RT:88097
         int ret = select( m_pClient->fd() + 1,
                           &readSet, &writeSet, &errorSet, &tval );
 

@@ -2,7 +2,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - List available methods
 #
-#   Copyright (c) 2010-2012 Jason McManus
+#   Copyright (c) 2010-2013 Jason McManus
 #
 #   List the methods callable from this compiled version of
 #   Finance::InteractiveBrokers::SWIG
@@ -12,7 +12,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.08';
+    $VERSION = '0.09';
 }
 $|=1;
 

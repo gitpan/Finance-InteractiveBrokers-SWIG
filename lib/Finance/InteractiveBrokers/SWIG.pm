@@ -2,7 +2,7 @@ package Finance::InteractiveBrokers::SWIG;
 #
 #   Finance::InteractiveBrokers::SWIG - InteractiveBrokers C++ connector
 #
-#   Copyright (c) 2010-2012 Jason McManus
+#   Copyright (c) 2010-2013 Jason McManus
 #
 #   Full POD documentation after __END__
 #
@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.08';
+    $VERSION  = '0.09';
 }
 
 *TRUE     = \1;

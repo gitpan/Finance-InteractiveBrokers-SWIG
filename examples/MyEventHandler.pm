@@ -2,7 +2,7 @@ package MyEventHandler;
 #
 #   Finance::InteractiveBrokers::SWIG - Demonstration event handler subclass
 #
-#   Copyright (c) 2010-2012 Jason McManus
+#   Copyright (c) 2010-2013 Jason McManus
 #
 #   To use this module:
 #
@@ -37,7 +37,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.08';
+    $VERSION = '0.09';
 }
 
 # Ours

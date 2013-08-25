@@ -2,7 +2,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - Tests for main module
 #
-#   Copyright (c) 2010-2012 Jason McManus
+#   Copyright (c) 2010-2013 Jason McManus
 #
 
 use Data::Dumper;
@@ -23,7 +23,7 @@ use TestUtil;
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.08';
+$VERSION = '0.09';
 *TRUE    = \1;
 *FALSE   = \0;
 

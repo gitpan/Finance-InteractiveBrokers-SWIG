@@ -2,7 +2,7 @@ package Finance::InteractiveBrokers::SWIG::EventHandler;
 #
 #   Finance::InteractiveBrokers::SWIG - Event handler base class
 #
-#   Copyright (c) 2010-2012 Jason McManus
+#   Copyright (c) 2010-2013 Jason McManus
 #
 #   Full POD documentation after __END__
 #
@@ -22,7 +22,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;
 
 use vars qw( $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED $AUTOLOAD );
 BEGIN {
-    $VERSION   = '0.08';
+    $VERSION   = '0.09';
 }
 
 *TRUE      = \1;

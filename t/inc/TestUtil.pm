@@ -2,7 +2,7 @@ package TestUtil;
 #
 #   Finance::InteractiveBrokers::SWIG - Misc test utilities
 #
-#   Copyright (c) 2010-2012 Jason McManus
+#   Copyright (c) 2010-2013 Jason McManus
 #
 
 use strict;
@@ -12,7 +12,7 @@ BEGIN {
     require Exporter;
     our @ISA       = qw( Exporter );
     our @EXPORT_OK = qw( random_string );
-    our $VERSION   = '0.08';
+    our $VERSION   = '0.09';
 }
 
 # Junk object

@@ -2,7 +2,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - List available events
 #
-#   Copyright (c) 2010-2012 Jason McManus
+#   Copyright (c) 2010-2013 Jason McManus
 #
 #   List the events required to be overridden by your subclass of
 #   Finance::InteractiveBrokers::SWIG::EventHandler
@@ -12,7 +12,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.08';
+    $VERSION = '0.09';
 }
 $|=1;
 

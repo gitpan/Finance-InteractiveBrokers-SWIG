@@ -1,7 +1,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - Perl makefile maker
 #
-#   (c) 2010-2012 Jason McManus
+#   (c) 2010-2013 Jason McManus
 #
 
 use 5.006;
@@ -16,7 +16,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.08';
+    $VERSION = '0.09';
 }
 
 *TRUE    = \1;
@@ -29,8 +29,8 @@ my $ALIEN_SWIG = 'Alien::SWIG';
 my $min_SWIG_version = '1.3.33';
 my( $SWIG_PATH, $SWIG_INCLUDES ) = ( '', '' );
 
-my @broken_compilers = qw(
-	i686-apple-darwin11-llvm-g++-4.2
+my @broken_compilers = (
+	'LLVM build 2335',
 );
 
 # Check for F::IB::API
@@ -479,7 +479,7 @@ sub get_cxx_fix
 
 	Your C++ compiler ($cxx_version) is BROKEN.
 
-	The g++ on Darwin with XCode 4.1 and 4.2 produces invalid output.
+	The g++ on Darwin with LLVM build 2335 produces invalid output.
 
 	You should upgrade to the latest OS-X developer tools.
 
