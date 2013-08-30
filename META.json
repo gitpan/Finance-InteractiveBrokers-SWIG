@@ -34,11 +34,11 @@
       },
       "runtime" : {
          "requires" : {
-            "Finance::InteractiveBrokers::API" : "0.02_03",
+            "Finance::InteractiveBrokers::API" : "0.04",
             "Test::More" : "0.88"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.09"
+   "version" : "0.10"
 }

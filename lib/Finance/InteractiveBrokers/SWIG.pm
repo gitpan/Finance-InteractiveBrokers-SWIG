@@ -15,7 +15,7 @@ use strict;
 use warnings;
 
 # Ours
-use Finance::InteractiveBrokers::API;           # another package
+use Finance::InteractiveBrokers::API 0.04;      # another package
 use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 ###
@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.09';
+    $VERSION  = '0.10';
 }
 
 *TRUE     = \1;

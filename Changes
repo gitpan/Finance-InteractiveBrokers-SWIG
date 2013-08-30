@@ -10,6 +10,9 @@ DOC:    Changes to documentation.
 TST:    New tests
 ------------------------------------------------------------
 
+0.10     2013-08-31
+         NEW: RT#88097 - Add setSelectTimeout() method
+
 0.09     2013-08-26
          BUG: RT#88097 - Spurious error message (IBAPI bug) - thanks!
          FIX: Refined OS-X broken compiler check - LLVM 2335 rejected

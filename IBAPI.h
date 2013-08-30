@@ -61,6 +61,8 @@ public:
 
     // loop message-receiver function
     void processMessages();
+    // set the select(2) timeout (integer)
+    void setSelectTimeout(time_t timeout);
     // get the API version
     double version();
     // get an integral API version
@@ -270,6 +272,7 @@ private:
     std::auto_ptr<EPosixClientSocket> m_pClient;
     State m_state;
     time_t m_sleepDeadline;
+    time_t m_selectTimeout;
 
     OrderId m_orderId;
 };

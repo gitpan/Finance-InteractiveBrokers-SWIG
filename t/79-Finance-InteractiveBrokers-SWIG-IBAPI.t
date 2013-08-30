@@ -19,7 +19,7 @@ use Finance::InteractiveBrokers::API;
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.09';
+$VERSION = '0.10';
 *TRUE    = \1;
 *FALSE   = \0;
 

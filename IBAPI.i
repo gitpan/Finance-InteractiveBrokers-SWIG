@@ -29,7 +29,7 @@
 
 use vars qw( $VERSION $API_VERSION $BUILD_TIME );
 BEGIN {
-    $VERSION = '0.09';
+    $VERSION = '0.10';
 }
 
 $API_VERSION = IB_API_VERSION;  # IB API version
@@ -97,9 +97,17 @@ sub build_time
  * This section defines the interface seen by Perl in ::IBAPI.pm
  */
 
-/* Include the SWIG declaration files to handle std::string and std::vector */
+/* Include the SWIG declaration files to handle std::string, std::vector, and time_t */
 %include "std_vector.i"
 %include "std_string.i"
+
+/* typemap for perl */
+%typemap(typecheck) time_t {
+   $1 = SvIOK($input);
+}
+
+/* Make sure setSelectTimeout refuses anything but a time_t */
+void IBAPIClient::setSelectTimeout(time_t);
 
 /* Make sure IBString is treated like std::string by SWIG */
 %apply std::string { IBString }

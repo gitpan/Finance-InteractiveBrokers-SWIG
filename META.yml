@@ -20,6 +20,6 @@ no_index:
     - t
     - inc
 requires:
-  Finance::InteractiveBrokers::API: 0.02_03
+  Finance::InteractiveBrokers::API: 0.04
   Test::More: 0.88
-version: 0.09
+version: 0.10

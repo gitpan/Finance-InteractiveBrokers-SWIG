@@ -16,7 +16,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.09';
+    $VERSION = '0.10';
 }
 
 *TRUE    = \1;
@@ -35,10 +35,10 @@ my @broken_compilers = (
 
 # Check for F::IB::API
 eval {
-    require Finance::InteractiveBrokers::API;
+    require Finance::InteractiveBrokers::API => 0.04;
 };
 croak( '*' x 76 . "\n" .
-       '  Cannot find Finance::InteractiveBrokers::API, required for this' .
+       '  Cannot find Finance::InteractiveBrokers::API >= 0.04, required for this' .
        " build.\n  Please install it from CPAN before continuing.\n" .
        '*' x 76 . "\n " )
     if( $@ );
@@ -253,7 +253,7 @@ WriteMakefile(
     PREREQ_PM => {
 		# For done_testing()
         'Test::More'                        => '0.88',
-        'Finance::InteractiveBrokers::API'  => '0.02_03',
+        'Finance::InteractiveBrokers::API'  => '0.04',
     },
     BUILD_REQUIRES => {
         'Finance::InteractiveBrokers::API'  => '0.02_03',

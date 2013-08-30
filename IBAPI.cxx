@@ -50,6 +50,7 @@ IBAPIClient::IBAPIClient()
     , m_state(ST_DISCONNECTED)
     , m_sleepDeadline(0)
     , m_orderId(0)
+    , m_selectTimeout(-1)
 {
 #ifdef DEBUG
     std::cout << "C++ constructor" << std::endl;
@@ -90,6 +91,13 @@ int IBAPIClient::build_time()
     return BUILD_TIME;
 }
 
+// Set select timeout
+// DONE
+void IBAPIClient::setSelectTimeout(time_t timeout)
+{
+    m_selectTimeout = timeout;
+}
+
 // Message processing loop
 // DONE
 void IBAPIClient::processMessages()
@@ -125,7 +133,10 @@ void IBAPIClient::processMessages()
     // initialize select() timeout with m_sleepDeadline - now
     if( m_sleepDeadline > 0 )
     {
-        tval.tv_sec = m_sleepDeadline - now;
+        if( m_selectTimeout >= 0 )
+            tval.tv_sec = m_selectTimeout;
+        else
+            tval.tv_sec = m_sleepDeadline - now;
     }
 
     if( m_pClient->fd() >= 0 )
