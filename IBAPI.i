@@ -1,7 +1,7 @@
 /* 
  * Finance::InteractiveBrokers::SWIG - SWIG interface file for IBAPI 9.64
  * 
- * Copyright (c) 2010-2013 Jason McManus
+ * Copyright (c) 2010-2014 Jason McManus
  */
 
 #ifndef IB_API_VERSION
@@ -29,7 +29,7 @@
 
 use vars qw( $VERSION $API_VERSION $BUILD_TIME );
 BEGIN {
-    $VERSION = '0.10';
+    $VERSION = '0.11';
 }
 
 $API_VERSION = IB_API_VERSION;  # IB API version

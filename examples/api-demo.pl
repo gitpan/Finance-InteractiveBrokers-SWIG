@@ -2,7 +2,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - API demonstration program
 #
-#   (c) 2010-2013 Jason McManus
+#   (c) 2010-2014 Jason McManus
 #
 #   This demonstration program shows how to use the F::IB::SWIG
 #   package to work with the IB API, and receive events.
@@ -29,7 +29,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.10';
+    $VERSION = '0.11';
 }
 
 # Ours

@@ -2,7 +2,7 @@ package MyEventHandler;
 #
 #   Finance::InteractiveBrokers::SWIG - Demonstration event handler subclass
 #
-#   Copyright (c) 2010-2013 Jason McManus
+#   Copyright (c) 2010-2014 Jason McManus
 #
 #   To use this module:
 #
@@ -37,7 +37,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.10';
+    $VERSION = '0.11';
 }
 
 # Ours
@@ -376,7 +376,7 @@ L<http://search.cpan.org/dist/Finance-InteractiveBrokers-SWIG/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2010-2012 Jason McManus
+Copyright (c) 2010-2014 Jason McManus
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

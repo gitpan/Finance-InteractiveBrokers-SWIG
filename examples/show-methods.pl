@@ -2,7 +2,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - List available methods
 #
-#   Copyright (c) 2010-2013 Jason McManus
+#   Copyright (c) 2010-2014 Jason McManus
 #
 #   List the methods callable from this compiled version of
 #   Finance::InteractiveBrokers::SWIG
@@ -12,7 +12,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.10';
+    $VERSION = '0.11';
 }
 $|=1;
 
@@ -138,7 +138,7 @@ L<http://search.cpan.org/dist/Finance-InteractiveBrokers-SWIG/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2010-2012 Jason McManus
+Copyright (c) 2010-2014 Jason McManus
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

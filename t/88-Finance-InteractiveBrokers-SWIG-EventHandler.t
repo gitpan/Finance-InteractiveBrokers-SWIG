@@ -2,7 +2,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - Tests for EventHandler module
 #
-#   Copyright (c) 2010-2013 Jason McManus
+#   Copyright (c) 2010-2014 Jason McManus
 #
 
 use Data::Dumper;
@@ -22,7 +22,7 @@ use lib 't/inc';                                # for TestEventHandler.pm
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.10';
+$VERSION = '0.11';
 *TRUE    = \1;
 *FALSE   = \0;
 

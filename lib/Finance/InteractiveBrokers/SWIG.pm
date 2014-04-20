@@ -2,7 +2,7 @@ package Finance::InteractiveBrokers::SWIG;
 #
 #   Finance::InteractiveBrokers::SWIG - InteractiveBrokers C++ connector
 #
-#   Copyright (c) 2010-2013 Jason McManus
+#   Copyright (c) 2010-2014 Jason McManus
 #
 #   Full POD documentation after __END__
 #
@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.10';
+    $VERSION  = '0.11';
 }
 
 *TRUE     = \1;
@@ -529,7 +529,7 @@ L<http://search.cpan.org/dist/Finance-InteractiveBrokers-SWIG/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2010-2012 Jason McManus
+Copyright (c) 2010-2014 Jason McManus
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

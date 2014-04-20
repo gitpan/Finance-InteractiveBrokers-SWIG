@@ -1,7 +1,7 @@
 #
 # Finance::InteractiveBrokers::SWIG - Makefile for SWIG build
 #
-# Copyright (c) 2010-2013 Jason McManus
+# Copyright (c) 2010-2014 Jason McManus
 # Version: 0.08
 #
 # This is usually invoked by 'perl Makefile.PL && make', but if you need to
@@ -103,6 +103,9 @@ endif
 ifeq "$(OSNAME)" "darwin"
 LDFLAGS += -Wl,-no_arch_warnings
 endif
+
+# Hacky patch for RT#94880: gcc >4.7 stopped including <unistd.h>
+CFLAGS += -include unistd.h
 
 IBSTRING=-DIB_USE_STD_STRING
 

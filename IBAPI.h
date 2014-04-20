@@ -1,7 +1,7 @@
 /*
  *  Finance::InteractiveBrokers::SWIG - IB API concrete class header
  *
- *  Copyright (c) 2010-2013 Jason McManus
+ *  Copyright (c) 2010-2014 Jason McManus
  */
 
 #ifndef IB_API_VERSION
@@ -25,6 +25,9 @@
 #if IB_API_INTVER >= 967
 #include "CommissionReport.h"
 #endif
+
+// Better patch for RT#94880: gcc >4.7 stopped including <unistd.h>
+#include <unistd.h>
 
 // Our base class, from the IB API
 #include "EWrapper.h"

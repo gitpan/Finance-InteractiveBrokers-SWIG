@@ -1,7 +1,7 @@
 /*
  *  Finance::InteractiveBrokers::SWIG - Perl/C embedding XS dispatcher
  *
- *  Copyright (c) 2010-2013 Jason McManus
+ *  Copyright (c) 2010-2014 Jason McManus
  *
  *  This is #include'd from the SWIG .i interface file
  *  (Borrowed from Advanced Perl Programming, 1st Ed.)

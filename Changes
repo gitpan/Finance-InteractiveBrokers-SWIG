@@ -10,8 +10,14 @@ DOC:    Changes to documentation.
 TST:    New tests
 ------------------------------------------------------------
 
+0.11     2014-04-20
+         BUG: RT#94880 - gcc >4.7 stopped including <unistd.h> by default
+         FIX: F::IB::API version check from 0.10 was broken
+         FIX: Regression tests for 0.10 were not added to MANIFEST
+
 0.10     2013-08-31
          NEW: RT#88097 - Add setSelectTimeout() method
+         TST: Added a couple of regression tests
 
 0.09     2013-08-26
          BUG: RT#88097 - Spurious error message (IBAPI bug) - thanks!

@@ -2,7 +2,7 @@ package TestEventHandler;
 #
 #   Finance::InteractiveBrokers::SWIG - Test EventHandler subclass
 #
-#   Copyright (c) 2010-2013 Jason McManus
+#   Copyright (c) 2010-2014 Jason McManus
 #
 
 use Carp qw( croak confess );
@@ -19,7 +19,7 @@ use base qw( Finance::InteractiveBrokers::SWIG::EventHandler );
 
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.10';
+    $VERSION = '0.11';
 }
 
 ###

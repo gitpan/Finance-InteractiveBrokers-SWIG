@@ -1,7 +1,7 @@
 /*
  *  Finance::InteractiveBrokers::SWIG - Perl/C embedding XS function header
  *
- *  Copyright (c) 2010-2013 Jason McManus
+ *  Copyright (c) 2010-2014 Jason McManus
  *
  *  (Borrowed from Advanced Perl Programming, 1st Ed.)
  */

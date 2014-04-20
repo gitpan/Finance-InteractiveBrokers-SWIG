@@ -7,7 +7,7 @@
 #   Reported by: Uwe Voelker
 #   Reported on: 2010-02-20
 #
-#   Copyright (c) 2010-2013 Jason McManus
+#   Copyright (c) 2010-2014 Jason McManus
 #
 
 use Data::Dumper;
@@ -22,7 +22,7 @@ $|=1;
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.10';
+$VERSION = '0.11';
 *TRUE    = \1;
 *FALSE   = \0;
 

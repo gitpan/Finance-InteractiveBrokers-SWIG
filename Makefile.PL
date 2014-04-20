@@ -1,7 +1,7 @@
 #
 #   Finance::InteractiveBrokers::SWIG - Perl makefile maker
 #
-#   (c) 2010-2013 Jason McManus
+#   Copyright (c) 2010-2014 Jason McManus
 #
 
 use 5.006;
@@ -16,7 +16,7 @@ $|=1;
 
 use vars qw( $VERSION $TRUE $FALSE );
 BEGIN {
-    $VERSION = '0.10';
+    $VERSION = '0.11';
 }
 
 *TRUE    = \1;
@@ -33,15 +33,17 @@ my @broken_compilers = (
 	'LLVM build 2335',
 );
 
-# Check for F::IB::API
+# Check for F::IB::API >0.04
+my $fibapi_outdated = $TRUE;
 eval {
-    require Finance::InteractiveBrokers::API => 0.04;
+    require Finance::InteractiveBrokers::API;
+    $fibapi_outdated = ($Finance::InteractiveBrokers::API::VERSION < 0.04);
 };
 croak( '*' x 76 . "\n" .
        '  Cannot find Finance::InteractiveBrokers::API >= 0.04, required for this' .
        " build.\n  Please install it from CPAN before continuing.\n" .
        '*' x 76 . "\n " )
-    if( $@ );
+    if( $@ or $fibapi_outdated );
 
 ##########################################################################
 ### Collect some configuration information from the user
