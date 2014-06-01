@@ -22,7 +22,7 @@ $|=1;
 
 use vars qw( $TRUE $FALSE $VERSION );
 
-$VERSION = '0.11';
+$VERSION = '0.12';
 *TRUE    = \1;
 *FALSE   = \0;
 

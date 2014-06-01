@@ -10,6 +10,12 @@ DOC:    Changes to documentation.
 TST:    New tests
 ------------------------------------------------------------
 
+0.12     2014-06-01
+         BUG: RT#96110 - RT#88097 was incomplete - thanks!
+         TST: Tests for above now actually work..
+         BUG: RT#94918 - Fixed examples/api-demo.pl - thanks!
+         DOC: RT#94897 - IB changed their API doc URL.
+
 0.11     2014-04-20
          BUG: RT#94880 - gcc >4.7 stopped including <unistd.h> by default
          FIX: F::IB::API version check from 0.10 was broken

@@ -29,7 +29,7 @@
 
 use vars qw( $VERSION $API_VERSION $BUILD_TIME );
 BEGIN {
-    $VERSION = '0.11';
+    $VERSION = '0.12';
 }
 
 $API_VERSION = IB_API_VERSION;  # IB API version
@@ -101,9 +101,15 @@ sub build_time
 %include "std_vector.i"
 %include "std_string.i"
 
-/* typemap for perl */
+/* time_t typemaps for perl */
 %typemap(typecheck) time_t {
-   $1 = SvIOK($input);
+    $1 = SvIOK($input) ? 1 : 0;
+}
+%typemap(in) time_t {
+    $1 = SvIV($input);
+}
+%typemap(out) time_t {
+    sv_setiv($result, $input);
 }
 
 /* Make sure setSelectTimeout refuses anything but a time_t */

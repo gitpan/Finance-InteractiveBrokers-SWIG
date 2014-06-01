@@ -24,7 +24,7 @@ use Finance::InteractiveBrokers::SWIG::IBAPI;   # SWIG module
 
 use vars qw( $VERSION $AUTOLOAD $TRUE $FALSE $KEEP $DELETE $REQUIRED );
 BEGIN {
-    $VERSION  = '0.11';
+    $VERSION  = '0.12';
 }
 
 *TRUE     = \1;
@@ -468,7 +468,7 @@ L<http://poe.perl.org/> - All about the Perl Object Environment (POE)
 
 L<http://www.interactivebrokers.com/> - The InteractiveBrokers website
 
-L<http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm> - The IB API documentation
+L<https://www.interactivebrokers.com/en/software/api/api.htm> - The IB API documentation
 
 The F<examples/> directory of this module's distribution.
 

@@ -29,7 +29,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.11';
+    $VERSION = '0.12';
 }
 
 # Ours
@@ -156,6 +156,7 @@ exit( 0 );
 #
 # See also: the IB API documentation for the reqIDs() call
 #
+BEGIN
 {
     my $id = 0;
     sub get_next_id

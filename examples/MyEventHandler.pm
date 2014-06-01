@@ -37,7 +37,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.11';
+    $VERSION = '0.12';
 }
 
 # Ours
@@ -107,7 +107,7 @@ sub currentTime
 #
 
 # Docs here:
-# http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/c/tickprice.htm
+# https://www.interactivebrokers.com/en/software/api/apiguide/c/tickprice.htm
 sub tickPrice
 {
     my( $self, $reqId, $tickType, $price, $canAutoExecute ) = @_;
@@ -315,7 +315,7 @@ L<http://poe.perl.org/> - All about the Perl Object Environment (POE)
 
 L<http://www.interactivebrokers.com/> - The InteractiveBrokers website
 
-L<http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm> - The IB API documentation
+L<https://www.interactivebrokers.com/en/software/api/api.htm> - The IB API documentation
 
 The F<examples/> directory of this module's distribution
 

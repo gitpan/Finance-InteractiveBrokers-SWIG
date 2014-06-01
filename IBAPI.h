@@ -28,6 +28,7 @@
 
 // Better patch for RT#94880: gcc >4.7 stopped including <unistd.h>
 #include <unistd.h>
+#include <ctime>
 
 // Our base class, from the IB API
 #include "EWrapper.h"

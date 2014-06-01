@@ -12,7 +12,7 @@ BEGIN {
     require Exporter;
     our @ISA       = qw( Exporter );
     our @EXPORT_OK = qw( random_string );
-    our $VERSION   = '0.11';
+    our $VERSION   = '0.12';
 }
 
 # Junk object
