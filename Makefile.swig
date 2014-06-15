@@ -76,9 +76,11 @@ MODFULL = $(MODBASE)::$(MODNAME)
 LIBNAME = $(MODNAME).$(DLEXT)
 
 # Get the perl C opts from perl itself, and clean them up for C++
-PERLOPTS := $(shell perl -MExtUtils::Embed -e ccopts)
-PERLOPTS := $(subst -Wdeclaration-after-statement,,$(PERLOPTS))
+RAWPOPTS := $(shell perl -MExtUtils::Embed -e ccopts)
+PERLOPTS := $(subst -Wdeclaration-after-statement,,$(RAWPOPTS))
 PERLOPTS := $(subst -fstack-protector,,$(PERLOPTS))
+PERLOPTS := $(subst -D_LARGEFILE_SOURCE,,$(PERLOPTS))
+PERLOPTS := $(subst -D_FILE_OFFSET_BITS=64,,$(PERLOPTS))
 
 SWIGOPTS = -c++ -perl -Wall \
 		   -DIB_API_VERSION=$(IB_API_VERSION) \
@@ -89,6 +91,9 @@ CFLAGS += -fPIC \
 		  -DIB_API_VERSION=$(IB_API_VERSION) \
 		  -DIB_API_INTVER=$(IB_API_INTVER) \
 		  -DBUILD_TIME=$(BUILD_TIME)
+CFLAGS += $(findstring -D_LARGEFILE_SOURCE,$(RAWPOPTS))
+CFLAGS += $(findstring -D_FILE_OFFSET_BITS=64,$(RAWPOPTS))
+
 LDFLAGS += $(shell perl -MConfig -le'print $$Config{lddlflags}')
 LDFLAGS += $(shell perl -MExtUtils::Embed -e ldopts)
 LDFLAGS := $(subst -fstack-protector,,$(LDFLAGS))

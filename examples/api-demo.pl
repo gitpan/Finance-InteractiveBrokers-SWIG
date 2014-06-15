@@ -29,7 +29,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '0.12';
+    $VERSION = '0.13';
 }
 
 # Ours

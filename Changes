@@ -10,6 +10,9 @@ DOC:    Changes to documentation.
 TST:    New tests
 ------------------------------------------------------------
 
+0.13     2014-06-15
+         FIX: RT#96322 - Globalize -DFILE_OFFSET_BITS and -DLARGEFILE_SOURCE
+
 0.12     2014-06-01
          BUG: RT#96110 - RT#88097 was incomplete - thanks!
          TST: Tests for above now actually work..
